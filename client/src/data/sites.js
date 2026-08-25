@@ -1,3 +1,5 @@
+export const LIVE_APP_URL = 'https://speakupapp.vercel.app/';
+
 export const POSTER_SITES = [
   { slug: 'gate-1', name: 'Gate 1', zone: 'Main Gate' },
   { slug: 'gate-2', name: 'Gate 2', zone: 'Main Gate' },

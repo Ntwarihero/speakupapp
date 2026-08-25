@@ -1,20 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import BrandMark from '../components/BrandMark';
+import { LIVE_APP_URL } from '../data/sites';
 
 export default function PrintPosters() {
-  const [target, setTarget] = useState(() => window.location.origin.replace(/\/$/, '') + '/');
+  const [target, setTarget] = useState(LIVE_APP_URL);
   const [qr, setQr] = useState('');
 
   const cleanUrl = useMemo(() => {
     try {
-      const url = new URL(target.trim() || window.location.origin);
+      const url = new URL(target.trim() || LIVE_APP_URL);
       url.hash = '';
       url.search = '';
       if (!url.pathname.endsWith('/')) url.pathname += '/';
       return url.toString();
     } catch {
-      return window.location.origin + '/';
+      return LIVE_APP_URL;
     }
   }, [target]);
 
@@ -53,8 +54,9 @@ export default function PrintPosters() {
             onChange={(e) => setTarget(e.target.value)}
           />
           <p className="small text-muted">
-            If you have already published to Vercel, paste that URL here before printing. A
-            localhost address will only work on this computer.
+            The QR code opens the live SpeakUp site:
+            {' '}
+            <a href={LIVE_APP_URL} target="_blank" rel="noreferrer">{LIVE_APP_URL}</a>
           </p>
           <button type="button" className="btn btn-dpw" onClick={() => window.print()}>
             Print poster

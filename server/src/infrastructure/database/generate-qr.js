@@ -20,7 +20,7 @@ const slugs = [
 async function generate() {
   const out = path.resolve(__dirname, '../../../../client/public/qr');
   fs.mkdirSync(out, { recursive: true });
-  const base = process.env.APP_URL || 'https://safety.dpworldkigali.com';
+  const base = process.env.APP_URL || 'https://speakupapp.vercel.app';
   for (const slug of slugs) {
     await QRCode.toFile(path.join(out, `${slug}.png`), `${base.replace(/\/$/, '')}/?loc=${slug}`, {
       width: 640,
