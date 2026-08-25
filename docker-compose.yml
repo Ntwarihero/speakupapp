@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: speakup-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: speakup
+      MYSQL_USER: speakup
+      MYSQL_PASSWORD: speakup_dev_password
+      MYSQL_ROOT_PASSWORD: speakup_root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - speakup_mysql:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uspeakup", "-pspeakup_dev_password"]
+      interval: 8s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  speakup_mysql:

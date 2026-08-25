@@ -1,0 +1,7 @@
+rewrites:
+  - source: /api/:path*
+    destination: https://REPLACE_API_HOST/api/:path*
+  - source: /uploads/:path*
+    destination: https://REPLACE_API_HOST/uploads/:path*
+  - source: /(.*)
+    destination: /index.html
