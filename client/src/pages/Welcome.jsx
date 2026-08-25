@@ -31,7 +31,7 @@ export default function Welcome() {
 
   const askWho = async () => {
     i18n.changeLanguage(picked);
-    const options = Object.fromEntries(ROLE_ORDER.map((r, i) => [r, `${i + 1}. ${t(`roles.${r}`)}`]));
+    const options = Object.fromEntries(ROLE_ORDER.map((r) => [r, t(`roles.${r}`)]));
     const result = await Swal.fire({
       title: t('identify.title'),
       text: t('identify.text'),
