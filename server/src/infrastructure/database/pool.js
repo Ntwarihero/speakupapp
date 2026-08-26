@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   namedPlaceholders: true,
   timezone: 'Z',
   charset: 'utf8mb4',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+  ssl: env.dbSsl ? { rejectUnauthorized: false } : undefined,
 });
 
 async function query(sql, params) {

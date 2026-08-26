@@ -12,3 +12,4 @@ coverage/
 *.tmp
 client/dev-dist/
 server/uploads/
+.env*

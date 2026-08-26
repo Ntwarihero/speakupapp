@@ -26,6 +26,9 @@ function mysqlFromUrl(url) {
 }
 
 const fromUrl = mysqlFromUrl(process.env.DATABASE_URL || process.env.MYSQL_URL);
+const dbUrl = process.env.DATABASE_URL || process.env.MYSQL_URL || '';
+const dbSsl =
+  process.env.DB_SSL === 'true' || /ssl-mode|aivencloud\.com/i.test(dbUrl);
 
 const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -73,6 +76,7 @@ const env = {
     maxFiles: Number(process.env.MAX_FILES || 6),
     dir: process.env.VERCEL ? '/tmp/speakup-uploads' : path.resolve(__dirname, '../../uploads'),
   },
+  dbSsl,
 };
 
 module.exports = { env };
