@@ -2,8 +2,9 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 function requiredInProd(name, fallback) {
-  const value = process.env[name] ?? fallback;
-  if (process.env.NODE_ENV === 'production' && !process.env[name]) {
+  const raw = process.env[name];
+  const value = raw && String(raw).trim() ? raw : fallback;
+  if (process.env.NODE_ENV === 'production' && value === fallback) {
     console.warn(`Missing ${name}; using a development fallback. Set this in Vercel Environment Variables.`);
   }
   return value;
