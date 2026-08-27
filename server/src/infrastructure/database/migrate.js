@@ -72,12 +72,22 @@ async function ensureAuthSchema() {
       expires_at DATETIME NOT NULL,
       consumed_at DATETIME NULL,
       attempts INT NOT NULL DEFAULT 0,
+      purpose VARCHAR(20) NOT NULL DEFAULT 'login',
       created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       CONSTRAINT fk_otp_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
       INDEX idx_otp_user (user_id),
       INDEX idx_otp_expires (expires_at)
     ) ENGINE=InnoDB
   `);
+  try {
+    await conn.query(
+      "ALTER TABLE login_otps ADD COLUMN purpose VARCHAR(20) NOT NULL DEFAULT 'login'"
+    );
+  } catch (err) {
+    if (!/Duplicate column|ER_DUP_FIELDNAME/i.test(err.message)) {
+      throw err;
+    }
+  }
   await conn.end();
 }
 

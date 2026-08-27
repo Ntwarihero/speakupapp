@@ -16,8 +16,9 @@
   },
   "identify": {
     "title": "Uri nde?",
-    "text": "Hitamo icyo uvugwaho. Abashyitsi, abakiriya, abaharanira amasezerano n'abashoferi bashobora gutanga raporo ako kanya — nta kwiyandikisha.",
-    "confirm": "Komeza"
+    "text": "Hitamo icyo uvugwaho. Abashyitsi, abakiriya, abaharanira amasezerano n'abashoferi bashobora gutanga raporo ako kanya — nta kwinjira. Abakozi bahitamo Injira.",
+    "confirm": "Komeza",
+    "loginOption": "Injira"
   },
   "roles": {
     "visitor": "Umushyitsi wa DP World",
@@ -76,7 +77,20 @@
     "confirmPassword": "Emeza ijambo ry'ibanga",
     "setPasswordSave": "Bika ijambo ry'ibanga",
     "setPasswordMismatch": "Amagambo y'ibanga ntabwo ahuye",
-    "setPasswordDone": "Ijambo ry'ibanga ryahinduwe"
+    "setPasswordDone": "Ijambo ry'ibanga ryahinduwe",
+    "forgotLink": "Wibagiwe ijambo ry'ibanga?",
+    "forgotTitle": "Hindura ijambo ry'ibanga",
+    "forgotText": "Andika izina cyangwa imeri. Twohereza kode y'imibare 6 kuri imeri y'konti.",
+    "forgotIdentifier": "Izina cyangwa imeri",
+    "forgotSubmit": "Ohereza kode",
+    "resetTitle": "Hitamo ijambo ry'ibanga rishya",
+    "resetSave": "Hindura ijambo ry'ibanga",
+    "resetFailed": "Guhindura byanze",
+    "resetSentTitle": "Reba imeri yawe",
+    "resetSentText": "Niba konti ihari, kode yoherejwe kuri imeri yanditswe.",
+    "resetDone": "Ijambo ry'ibanga ryahinduwe",
+    "resetDoneText": "Injira n'ijambo rishya. Uzongera kubona OTP yo kwinjira.",
+    "backToLogin": "Subira ku kwinjira"
   },
   "home": {
     "publicTitle": "Tanga raporo y'umutekano",

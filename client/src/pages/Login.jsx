@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 import { useAuth } from '../context/AuthContext';
@@ -127,6 +127,9 @@ export default function Login() {
                 <button className="btn btn-dpw w-100" disabled={busy} type="submit">
                   {busy ? t('common.loading') : t('auth.submit')}
                 </button>
+                <div className="text-center mt-3">
+                  <Link to="/forgot-password">{t('auth.forgotLink')}</Link>
+                </div>
               </form>
             </>
           ) : (

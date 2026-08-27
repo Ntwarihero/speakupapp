@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS login_otps (
   expires_at      DATETIME      NOT NULL,
   consumed_at     DATETIME      NULL,
   attempts        INT           NOT NULL DEFAULT 0,
+  purpose         VARCHAR(20)   NOT NULL DEFAULT 'login',
   created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_otp_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_otp_user (user_id),

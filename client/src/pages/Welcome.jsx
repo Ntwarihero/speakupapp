@@ -4,18 +4,10 @@ import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 import BrandMark from '../components/BrandMark';
 import { LANGS } from '../components/LanguageSwitcher';
-import { useSession, PUBLIC } from '../context/SessionContext';
+import { useSession } from '../context/SessionContext';
 
-const ROLE_ORDER = [
-  'visitor',
-  'customer',
-  'contractor',
-  'driver',
-  'employee',
-  'safety_officer',
-  'safety_manager',
-  'administrator',
-];
+const PUBLIC_CHOICES = ['visitor', 'customer', 'contractor', 'driver'];
+const LOGIN_CHOICE = 'login';
 
 export default function Welcome() {
   const { t, i18n } = useTranslation();
@@ -31,7 +23,10 @@ export default function Welcome() {
 
   const askWho = async () => {
     i18n.changeLanguage(picked);
-    const options = Object.fromEntries(ROLE_ORDER.map((r) => [r, t(`roles.${r}`)]));
+    const options = {
+      ...Object.fromEntries(PUBLIC_CHOICES.map((r) => [r, t(`roles.${r}`)])),
+      [LOGIN_CHOICE]: t('identify.loginOption'),
+    };
     const result = await Swal.fire({
       title: t('identify.title'),
       text: t('identify.text'),
@@ -44,9 +39,12 @@ export default function Welcome() {
       allowEscapeKey: false,
     });
     if (!result.value) return;
+    if (result.value === LOGIN_CHOICE) {
+      navigate('/login');
+      return;
+    }
     setCategory(result.value);
-    if (PUBLIC.includes(result.value)) navigate('/home');
-    else navigate('/login');
+    navigate('/home');
   };
 
   return (

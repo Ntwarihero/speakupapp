@@ -16,8 +16,9 @@
   },
   "identify": {
     "title": "Qui êtes-vous ?",
-    "text": "Sélectionnez l’option qui vous correspond. Visiteurs, clients, prestataires et conducteurs peuvent signaler immédiatement — sans connexion.",
-    "confirm": "Continuer"
+    "text": "Sélectionnez l’option qui vous correspond. Visiteurs, clients, prestataires et conducteurs peuvent signaler immédiatement — sans connexion. Le personnel doit choisir Connexion.",
+    "confirm": "Continuer",
+    "loginOption": "Connexion"
   },
   "roles": {
     "visitor": "Visiteur DP World",
@@ -76,7 +77,20 @@
     "confirmPassword": "Confirmer le mot de passe",
     "setPasswordSave": "Enregistrer le mot de passe",
     "setPasswordMismatch": "Les nouveaux mots de passe ne correspondent pas",
-    "setPasswordDone": "Mot de passe mis à jour"
+    "setPasswordDone": "Mot de passe mis à jour",
+    "forgotLink": "Mot de passe oublié ?",
+    "forgotTitle": "Réinitialiser le mot de passe",
+    "forgotText": "Saisissez votre nom d’utilisateur ou e-mail. Un code à 6 chiffres sera envoyé à l’adresse du compte.",
+    "forgotIdentifier": "Nom d’utilisateur ou e-mail",
+    "forgotSubmit": "Envoyer le code",
+    "resetTitle": "Choisir un nouveau mot de passe",
+    "resetSave": "Réinitialiser",
+    "resetFailed": "Échec de la réinitialisation",
+    "resetSentTitle": "Vérifiez votre e-mail",
+    "resetSentText": "Si un compte existe, un code a été envoyé à l’e-mail enregistré.",
+    "resetDone": "Mot de passe réinitialisé",
+    "resetDoneText": "Connectez-vous avec le nouveau mot de passe. Un OTP de connexion sera encore envoyé.",
+    "backToLogin": "Retour à la connexion"
   },
   "home": {
     "publicTitle": "Signaler un problème de sécurité",

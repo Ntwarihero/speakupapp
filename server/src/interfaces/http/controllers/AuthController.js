@@ -21,6 +21,18 @@ const changePasswordRules = [
   validate,
 ];
 
+const forgotRules = [
+  body('username').trim().notEmpty().withMessage('Username or email is required'),
+  validate,
+];
+
+const resetRules = [
+  body('challengeId').trim().notEmpty().withMessage('Reset session is required'),
+  body('otp').trim().isLength({ min: 6, max: 6 }).withMessage('Enter the 6-digit code'),
+  body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),
+  validate,
+];
+
 async function login(req, res, next) {
   try {
     const result = await AuthService.login({
@@ -94,6 +106,33 @@ async function changePassword(req, res, next) {
   }
 }
 
+async function forgotPassword(req, res, next) {
+  try {
+    const result = await AuthService.requestPasswordReset({ username: req.body.username });
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    const result = await AuthService.resetPassword({
+      challengeId: req.body.challengeId,
+      otp: req.body.otp,
+      newPassword: req.body.newPassword,
+    });
+    try {
+      await writeAudit(req, { action: 'reset_password', entity: 'user' });
+    } catch (auditErr) {
+      console.warn('reset audit skipped', auditErr.message);
+    }
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function me(req, res) {
   res.json({ user: req.user });
 }
@@ -133,6 +172,8 @@ module.exports = {
   refresh,
   logout,
   changePassword,
+  forgotPassword,
+  resetPassword,
   me,
   listUsers,
   createUser,
@@ -140,4 +181,6 @@ module.exports = {
   loginRules,
   otpRules,
   changePasswordRules,
+  forgotRules,
+  resetRules,
 };

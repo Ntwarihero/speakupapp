@@ -39,6 +39,8 @@ function buildRouter() {
   api.post('/auth/login', loginLimiter, AuthController.loginRules, AuthController.login);
   api.post('/auth/verify-otp', loginLimiter, AuthController.otpRules, AuthController.verifyOtp);
   api.post('/auth/resend-otp', loginLimiter, AuthController.resendOtp);
+  api.post('/auth/forgot-password', loginLimiter, AuthController.forgotRules, AuthController.forgotPassword);
+  api.post('/auth/reset-password', loginLimiter, AuthController.resetRules, AuthController.resetPassword);
   api.post('/auth/refresh', AuthController.refresh);
   api.post('/auth/logout', optionalAuth, AuthController.logout);
   api.get('/auth/me', requireAuth, AuthController.me);

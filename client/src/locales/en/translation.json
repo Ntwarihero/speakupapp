@@ -16,8 +16,9 @@
   },
   "identify": {
     "title": "Who Are You?",
-    "text": "Select the option that best describes you. Visitors, customers, contractors and drivers can report immediately — no login required.",
-    "confirm": "Continue"
+    "text": "Select the option that best describes you. Visitors, customers, contractors and drivers can report immediately — no login required. Staff should choose Log in.",
+    "confirm": "Continue",
+    "loginOption": "Log in"
   },
   "roles": {
     "visitor": "DP World Visitor",
@@ -76,7 +77,20 @@
     "confirmPassword": "Confirm new password",
     "setPasswordSave": "Save password",
     "setPasswordMismatch": "The new passwords do not match",
-    "setPasswordDone": "Password updated"
+    "setPasswordDone": "Password updated",
+    "forgotLink": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotText": "Enter your username or email. We will send a 6-digit code to the address on your account.",
+    "forgotIdentifier": "Username or email",
+    "forgotSubmit": "Send reset code",
+    "resetTitle": "Choose a new password",
+    "resetSave": "Reset password",
+    "resetFailed": "Password reset failed",
+    "resetSentTitle": "Check your email",
+    "resetSentText": "If an account exists, a reset code was sent to the registered email.",
+    "resetDone": "Password reset",
+    "resetDoneText": "Sign in with your new password. You will still receive a login OTP.",
+    "backToLogin": "Back to sign in"
   },
   "home": {
     "publicTitle": "Report a safety concern",

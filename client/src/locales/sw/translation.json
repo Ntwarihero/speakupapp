@@ -16,8 +16,9 @@
   },
   "identify": {
     "title": "Wewe ni nani?",
-    "text": "Chagua chaguo linalokufaa. Wageni, wateja, makandarasi na madereva wanaweza kuripoti mara moja — bila kuingia.",
-    "confirm": "Endelea"
+    "text": "Chagua chaguo linalokufaa. Wageni, wateja, makandarasi na madereva wanaweza kuripoti mara moja — bila kuingia. Wafanyakazi wachague Ingia.",
+    "confirm": "Endelea",
+    "loginOption": "Ingia"
   },
   "roles": {
     "visitor": "Mgeni wa DP World",
@@ -76,7 +77,20 @@
     "confirmPassword": "Thibitisha nenosiri",
     "setPasswordSave": "Hifadhi nenosiri",
     "setPasswordMismatch": "Manenosiri mapya hayafanani",
-    "setPasswordDone": "Nenosiri limesasishwa"
+    "setPasswordDone": "Nenosiri limesasishwa",
+    "forgotLink": "Umesahau nenosiri?",
+    "forgotTitle": "Weka nenosiri upya",
+    "forgotText": "Weka jina la mtumiaji au barua pepe. Tutakutumia nambari ya tarakimu 6.",
+    "forgotIdentifier": "Jina la mtumiaji au barua pepe",
+    "forgotSubmit": "Tuma nambari",
+    "resetTitle": "Chagua nenosiri jipya",
+    "resetSave": "Weka nenosiri upya",
+    "resetFailed": "Imeshindikana kuweka nenosiri upya",
+    "resetSentTitle": "Angalia barua pepe",
+    "resetSentText": "Ikiwa akaunti ipo, nambari imetumwa kwa barua pepe iliyosajiliwa.",
+    "resetDone": "Nenosiri limewekwa upya",
+    "resetDoneText": "Ingia kwa nenosiri jipya. Bado utapokea OTP ya kuingia.",
+    "backToLogin": "Rudi kuingia"
   },
   "home": {
     "publicTitle": "Ripoti suala la usalama",

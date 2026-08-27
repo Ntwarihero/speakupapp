@@ -59,4 +59,24 @@ async function sendLoginOtp({ to, fullName, otp }) {
   }
 }
 
-module.exports = { sendWelcomeCredentials, sendLoginOtp };
+async function sendPasswordResetOtp({ to, fullName, otp }) {
+  const subject = 'SpeakUp password reset code';
+  const text = [
+    `Hello ${fullName},`,
+    '',
+    `Your SpeakUp password reset code is: ${otp}`,
+    'This code expires in 10 minutes. If you did not request a reset, ignore this email.',
+  ].join('\n');
+  const html = wrapHtml('Password reset code', `
+    <p>Hello ${esc(fullName)},</p>
+    <p>Use this code to set a new SpeakUp password. It expires in <strong>10 minutes</strong>.</p>
+    <p style="font-size:28px;letter-spacing:8px;font-weight:700;color:#5c2d91;margin:16px 0">${esc(otp)}</p>
+    <p>If you did not ask to reset your password, you can ignore this email.</p>
+  `);
+  const result = await sendEmail({ to, subject, text, html });
+  if (result.skipped) {
+    throw new AppError('Email is not configured. Cannot send the reset code.', 503, 'SMTP_NOT_CONFIGURED');
+  }
+}
+
+module.exports = { sendWelcomeCredentials, sendLoginOtp, sendPasswordResetOtp };

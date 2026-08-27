@@ -5,7 +5,7 @@ const { hashPassword, verifyPassword } = require('../../infrastructure/auth/pass
 const { signAccessToken, signRefreshToken, verifyRefresh } = require('../../infrastructure/auth/jwt');
 const { UnauthorizedError, ForbiddenError, ConflictError, NotFoundError, AppError } = require('../../shared/errors');
 const { ROLES } = require('../../shared/constants');
-const { sendWelcomeCredentials, sendLoginOtp } = require('../../infrastructure/notifications/accountMail');
+const { sendWelcomeCredentials, sendLoginOtp, sendPasswordResetOtp } = require('../../infrastructure/notifications/accountMail');
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
@@ -74,18 +74,94 @@ async function issueSession(user, { ip, userAgent }) {
 async function createLoginOtp(user) {
   await query(
     `UPDATE login_otps SET consumed_at = NOW()
-     WHERE user_id = ? AND consumed_at IS NULL`,
+     WHERE user_id = ? AND consumed_at IS NULL AND purpose = 'login'`,
     [user.id]
   );
   const otp = String(crypto.randomInt(100000, 1000000));
   const id = uuid();
   await query(
-    `INSERT INTO login_otps (id, user_id, otp_hash, expires_at)
-     VALUES (?, ?, ?, ?)`,
+    `INSERT INTO login_otps (id, user_id, otp_hash, expires_at, purpose)
+     VALUES (?, ?, ?, ?, 'login')`,
     [id, user.id, hashOtp(otp), new Date(Date.now() + OTP_TTL_MS)]
   );
   await sendLoginOtp({ to: user.email, fullName: user.full_name, otp });
   return id;
+}
+
+async function createResetOtp(user) {
+  await query(
+    `UPDATE login_otps SET consumed_at = NOW()
+     WHERE user_id = ? AND consumed_at IS NULL AND purpose = 'reset'`,
+    [user.id]
+  );
+  const otp = String(crypto.randomInt(100000, 1000000));
+  const id = uuid();
+  await query(
+    `INSERT INTO login_otps (id, user_id, otp_hash, expires_at, purpose)
+     VALUES (?, ?, ?, ?, 'reset')`,
+    [id, user.id, hashOtp(otp), new Date(Date.now() + OTP_TTL_MS)]
+  );
+  await sendPasswordResetOtp({ to: user.email, fullName: user.full_name, otp });
+  return id;
+}
+
+async function findByUsernameOrEmail(identifier) {
+  const value = String(identifier || '').trim();
+  if (!value) return null;
+  const rows = await query(
+    'SELECT * FROM users WHERE username = ? OR email = ? LIMIT 1',
+    [value, value]
+  );
+  return rows[0] || null;
+}
+
+async function requestPasswordReset({ username }) {
+  const user = await findByUsernameOrEmail(username);
+  const generic = {
+    ok: true,
+    message: 'If an account exists, a reset code was sent to the registered email.',
+  };
+  if (!user || !user.is_active) return generic;
+  const challengeId = await createResetOtp(user);
+  return {
+    ...generic,
+    challengeId,
+    emailHint: maskEmail(user.email),
+  };
+}
+
+async function resetPassword({ challengeId, otp, newPassword }) {
+  if (!challengeId || !otp) throw new UnauthorizedError('Verification code is required');
+  assertNewPassword(newPassword);
+  const rows = await query(
+    "SELECT * FROM login_otps WHERE id = ? AND purpose = 'reset'",
+    [challengeId]
+  );
+  const challenge = rows[0];
+  if (!challenge || challenge.consumed_at) {
+    throw new UnauthorizedError('Reset code is not valid');
+  }
+  if (new Date(challenge.expires_at).getTime() < Date.now()) {
+    throw new UnauthorizedError('Reset code has expired');
+  }
+  if (challenge.attempts >= OTP_MAX_ATTEMPTS) {
+    throw new UnauthorizedError('Too many incorrect codes. Request a new reset');
+  }
+  if (hashOtp(otp) !== challenge.otp_hash) {
+    await query('UPDATE login_otps SET attempts = attempts + 1 WHERE id = ?', [challengeId]);
+    throw new UnauthorizedError('Incorrect verification code');
+  }
+
+  await query('UPDATE login_otps SET consumed_at = NOW() WHERE id = ?', [challengeId]);
+  await query(
+    'UPDATE users SET password_hash = ?, must_change_password = 0 WHERE id = ?',
+    [await hashPassword(newPassword), challenge.user_id]
+  );
+  await query(
+    'UPDATE refresh_tokens SET revoked_at = NOW() WHERE user_id = ? AND revoked_at IS NULL',
+    [challenge.user_id]
+  );
+  return { ok: true };
 }
 
 async function login({ username, password }) {
@@ -273,6 +349,8 @@ module.exports = {
   login,
   verifyOtp,
   resendOtp,
+  requestPasswordReset,
+  resetPassword,
   refresh,
   logout,
   changePassword,
