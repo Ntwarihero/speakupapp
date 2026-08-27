@@ -41,10 +41,12 @@ async function verifyOtp(req, res, next) {
       ip: req.ip,
       userAgent: req.get('user-agent'),
     });
-    await writeAudit(
-      { ...req, user: result.user },
-      { action: 'login', entity: 'user', entityId: result.user.id }
-    );
+    req.user = result.user;
+    try {
+      await writeAudit(req, { action: 'login', entity: 'user', entityId: result.user.id });
+    } catch (auditErr) {
+      console.warn('login audit skipped', auditErr.message);
+    }
     res.json(result);
   } catch (err) {
     next(err);

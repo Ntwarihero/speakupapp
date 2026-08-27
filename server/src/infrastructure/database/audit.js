@@ -9,13 +9,13 @@ async function writeAudit(req, { action, entity, entityId, metadata }) {
     [
       uuid(),
       actor?.id || null,
-      actor?.full_name || actor?.username || 'public',
+      actor?.fullName || actor?.full_name || actor?.username || 'public',
       actor?.role || req.body?.reporterCategory || 'public',
       action,
       entity,
       entityId || null,
       req.ip,
-      req.get('user-agent') || null,
+      typeof req.get === 'function' ? req.get('user-agent') : null,
       metadata ? JSON.stringify(metadata) : null,
     ]
   );
