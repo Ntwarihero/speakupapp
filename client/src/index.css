@@ -210,6 +210,110 @@ a { color: var(--dpw-purple); }
 .swal2-popup { font-family: var(--font-body) !important; border-radius: 16px !important; }
 .swal2-title { font-family: var(--font-display) !important; color: var(--dpw-purple-ink) !important; }
 
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(92, 45, 145, 0.18);
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dpw-purple);
+}
+.live-pill.has-pending {
+  border-color: #b42318;
+  color: #b42318;
+  background: #fff5f5;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+  animation: live-pulse 1.6s ease-out infinite;
+}
+.live-pill.has-pending .live-dot {
+  background: #b42318;
+  box-shadow: 0 0 0 0 rgba(180, 35, 24, 0.7);
+}
+.live-count {
+  min-width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: #b42318;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+.swal-speakup-alert {
+  padding-top: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(92, 45, 145, 0.16) !important;
+}
+.swal-speakup-alert.is-urgent {
+  border-color: #b42318 !important;
+}
+.swal-hazard-stripe {
+  margin: 0 -0.1rem 1rem;
+  border-radius: 0;
+}
+.swal-kicker {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dpw-gold);
+  font-weight: 700;
+}
+.swal-alert-title {
+  font-family: var(--font-display);
+  color: var(--dpw-purple-ink);
+  font-size: 1.35rem;
+  margin: 0 0 8px;
+}
+.swal-report-no {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  color: var(--dpw-purple);
+  margin: 0 0 10px;
+}
+.swal-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  color: #4b5563;
+}
+.swal-desc {
+  text-align: left;
+  background: #f7f4fb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #1e1233;
+  margin: 0;
+}
+.swal-more {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }

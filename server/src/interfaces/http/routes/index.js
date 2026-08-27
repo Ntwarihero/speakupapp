@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 const AuthController = require('../controllers/AuthController');
 const ReportController = require('../controllers/ReportController');
 const OpsController = require('../controllers/OpsController');
-const { requireAuth, requireRoles, optionalAuth } = require('../middleware/auth');
+const { requireAuth, requireRoles, optionalAuth, requirePasswordSet } = require('../middleware/auth');
 const { upload } = require('../../../infrastructure/storage/uploader');
 const { ROLES } = require('../../../shared/constants');
 
@@ -37,9 +37,19 @@ function buildRouter() {
   api.get('/training', OpsController.training);
 
   api.post('/auth/login', loginLimiter, AuthController.loginRules, AuthController.login);
+  api.post('/auth/verify-otp', loginLimiter, AuthController.otpRules, AuthController.verifyOtp);
+  api.post('/auth/resend-otp', loginLimiter, AuthController.resendOtp);
   api.post('/auth/refresh', AuthController.refresh);
   api.post('/auth/logout', optionalAuth, AuthController.logout);
   api.get('/auth/me', requireAuth, AuthController.me);
+  api.post(
+    '/auth/change-password',
+    requireAuth,
+    AuthController.changePasswordRules,
+    AuthController.changePassword
+  );
+
+  const authed = [requireAuth, requirePasswordSet];
 
   api.post(
     '/reports',
@@ -49,43 +59,43 @@ function buildRouter() {
     ReportController.createRules,
     ReportController.create
   );
-  api.get('/reports', requireAuth, ReportController.list);
-  api.get('/reports/:id', requireAuth, ReportController.getOne);
-  api.patch('/reports/:id/status', requireAuth, requireRoles(...officer), ReportController.status);
-  api.patch('/reports/:id/assign', requireAuth, requireRoles(...officer), ReportController.assign);
+  api.get('/reports', ...authed, ReportController.list);
+  api.get('/reports/:id', ...authed, ReportController.getOne);
+  api.patch('/reports/:id/status', ...authed, requireRoles(...officer), ReportController.status);
+  api.patch('/reports/:id/assign', ...authed, requireRoles(...officer), ReportController.assign);
 
-  api.get('/reports/:reportId/investigation', requireAuth, requireRoles(...officer), OpsController.getInvestigation);
-  api.put('/reports/:reportId/investigation', requireAuth, requireRoles(...officer), OpsController.saveInvestigation);
+  api.get('/reports/:reportId/investigation', ...authed, requireRoles(...officer), OpsController.getInvestigation);
+  api.put('/reports/:reportId/investigation', ...authed, requireRoles(...officer), OpsController.saveInvestigation);
   api.post(
     '/reports/:reportId/investigation/approve',
-    requireAuth,
+    ...authed,
     requireRoles(...manager),
     OpsController.approveInvestigation
   );
 
-  api.get('/actions', requireAuth, requireRoles(...officer), OpsController.listActions);
-  api.post('/actions', requireAuth, requireRoles(...officer), OpsController.createAction);
-  api.patch('/actions/:id', requireAuth, requireRoles(...officer), OpsController.updateAction);
+  api.get('/actions', ...authed, requireRoles(...officer), OpsController.listActions);
+  api.post('/actions', ...authed, requireRoles(...officer), OpsController.createAction);
+  api.patch('/actions/:id', ...authed, requireRoles(...officer), OpsController.updateAction);
 
-  api.get('/analytics', requireAuth, requireRoles(...officer), OpsController.analytics);
+  api.get('/analytics', ...authed, requireRoles(...officer), OpsController.analytics);
 
-  api.get('/admin/users', requireAuth, requireRoles(...admin), AuthController.listUsers);
-  api.post('/admin/users', requireAuth, requireRoles(...admin), AuthController.createUser);
-  api.patch('/admin/users/:id', requireAuth, requireRoles(...admin), AuthController.updateUser);
+  api.get('/admin/users', ...authed, requireRoles(...admin), AuthController.listUsers);
+  api.post('/admin/users', ...authed, requireRoles(...admin), AuthController.createUser);
+  api.patch('/admin/users/:id', ...authed, requireRoles(...admin), AuthController.updateUser);
 
-  api.get('/admin/locations', requireAuth, requireRoles(...admin), OpsController.locations);
-  api.post('/admin/locations', requireAuth, requireRoles(...admin), OpsController.locations);
-  api.patch('/admin/locations/:id', requireAuth, requireRoles(...admin), OpsController.locations);
+  api.get('/admin/locations', ...authed, requireRoles(...admin), OpsController.locations);
+  api.post('/admin/locations', ...authed, requireRoles(...admin), OpsController.locations);
+  api.patch('/admin/locations/:id', ...authed, requireRoles(...admin), OpsController.locations);
 
-  api.get('/admin/categories', requireAuth, requireRoles(...admin), OpsController.categories);
-  api.post('/admin/categories', requireAuth, requireRoles(...admin), OpsController.categories);
-  api.patch('/admin/categories/:id', requireAuth, requireRoles(...admin), OpsController.categories);
+  api.get('/admin/categories', ...authed, requireRoles(...admin), OpsController.categories);
+  api.post('/admin/categories', ...authed, requireRoles(...admin), OpsController.categories);
+  api.patch('/admin/categories/:id', ...authed, requireRoles(...admin), OpsController.categories);
 
-  api.post('/admin/announcements', requireAuth, requireRoles(...manager), OpsController.announcements);
-  api.post('/admin/training', requireAuth, requireRoles(...manager), OpsController.training);
-  api.get('/admin/audit', requireAuth, requireRoles(...admin), OpsController.audit);
-  api.get('/admin/settings', requireAuth, requireRoles(...admin), OpsController.settings);
-  api.put('/admin/settings', requireAuth, requireRoles(...admin), OpsController.settings);
+  api.post('/admin/announcements', ...authed, requireRoles(...manager), OpsController.announcements);
+  api.post('/admin/training', ...authed, requireRoles(...manager), OpsController.training);
+  api.get('/admin/audit', ...authed, requireRoles(...admin), OpsController.audit);
+  api.get('/admin/settings', ...authed, requireRoles(...admin), OpsController.settings);
+  api.put('/admin/settings', ...authed, requireRoles(...admin), OpsController.settings);
 
   return api;
 }

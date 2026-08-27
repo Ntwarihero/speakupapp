@@ -11,7 +11,10 @@ export default function ReportList() {
   const [status, setStatus] = useState('');
 
   useEffect(() => {
-    api.get('/reports', { params: { q, status } }).then((r) => setReports(r.data.reports));
+    const load = () => api.get('/reports', { params: { q, status } }).then((r) => setReports(r.data.reports));
+    load();
+    window.addEventListener('speakup:reports-updated', load);
+    return () => window.removeEventListener('speakup:reports-updated', load);
   }, [q, status]);
 
   return (

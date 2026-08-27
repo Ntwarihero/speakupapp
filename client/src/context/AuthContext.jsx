@@ -37,7 +37,25 @@ export function AuthProvider({ children }) {
 
   const login = async (username, password) => {
     const { data } = await api.post('/auth/login', { username, password });
+    if (data.requiresOtp) return data;
     persist(data);
+    return data.user;
+  };
+
+  const verifyOtp = async (challengeId, otp) => {
+    const { data } = await api.post('/auth/verify-otp', { challengeId, otp });
+    persist(data);
+    return data.user;
+  };
+
+  const resendOtp = async (challengeId) => {
+    const { data } = await api.post('/auth/resend-otp', { challengeId });
+    return data;
+  };
+
+  const changePassword = async (currentPassword, newPassword) => {
+    const { data } = await api.post('/auth/change-password', { currentPassword, newPassword });
+    persist({ user: data.user });
     return data.user;
   };
 
@@ -71,7 +89,10 @@ export function AuthProvider({ children }) {
     };
   }, [user, logout]);
 
-  const value = useMemo(() => ({ user, ready, login, logout, persist }), [user, ready, logout]);
+  const value = useMemo(
+    () => ({ user, ready, login, verifyOtp, resendOtp, changePassword, logout, persist }),
+    [user, ready, logout]
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

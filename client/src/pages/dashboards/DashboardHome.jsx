@@ -30,11 +30,16 @@ export default function DashboardHome() {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    if (['safety_officer', 'safety_manager', 'administrator'].includes(user.role)) {
-      api.get('/analytics').then((r) => setData(r.data));
-    }
-    api.get('/reports').then((r) => setReports(r.data.reports.slice(0, 8)));
-    api.get('/announcements').then((r) => setNews(r.data.announcements.slice(0, 4)));
+    const load = () => {
+      if (['safety_officer', 'safety_manager', 'administrator'].includes(user.role)) {
+        api.get('/analytics').then((r) => setData(r.data));
+      }
+      api.get('/reports').then((r) => setReports(r.data.reports.slice(0, 8)));
+      api.get('/announcements').then((r) => setNews(r.data.announcements.slice(0, 4)));
+    };
+    load();
+    window.addEventListener('speakup:reports-updated', load);
+    return () => window.removeEventListener('speakup:reports-updated', load);
   }, [user.role]);
 
   const lead = {

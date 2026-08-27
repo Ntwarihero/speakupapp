@@ -12,6 +12,7 @@ import TrackReport from './pages/TrackReport';
 import ReportList from './pages/ReportList';
 import ReportDetail from './pages/ReportDetail';
 import DashboardHome, { AnalyticsPage, HeatmapPage } from './pages/dashboards/DashboardHome';
+import SetPassword from './pages/SetPassword';
 import {
   ActionsPage,
   AnnouncementsPage,
@@ -55,6 +56,7 @@ export default function App() {
               }
             >
               <Route index element={<DashboardHome />} />
+              <Route path="set-password" element={<SetPassword />} />
               <Route path="report" element={<InternalReport />} />
               <Route path="reports" element={<ReportList />} />
               <Route path="reports/:id" element={<ReportDetail />} />

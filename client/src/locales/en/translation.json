@@ -62,7 +62,21 @@
     "show": "Show",
     "hide": "Hide",
     "failed": "Sign-in failed",
-    "sessionExpired": "Your session ended. Please sign in again."
+    "sessionExpired": "Your session ended. Please sign in again.",
+    "otpTitle": "Enter verification code",
+    "otpText": "We sent a 6-digit code to {{email}}. It expires in 10 minutes.",
+    "otpLabel": "OTP code",
+    "otpConfirm": "Verify and continue",
+    "otpResend": "Send a new code",
+    "otpWait": "Resend in {{seconds}}s",
+    "setPasswordTitle": "Set a new password",
+    "setPasswordText": "Hello {{name}}. For security, replace the temporary password before using SpeakUp.",
+    "currentPassword": "Temporary / current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "setPasswordSave": "Save password",
+    "setPasswordMismatch": "The new passwords do not match",
+    "setPasswordDone": "Password updated"
   },
   "home": {
     "publicTitle": "Report a safety concern",
@@ -186,6 +200,16 @@
     "assigned": "Assigned",
     "noData": "No data yet"
   },
+  "alerts": {
+    "live": "Live",
+    "liveHint": "Watching for new SpeakUp reports",
+    "kicker": "SpeakUp · HSSE",
+    "title": "New safety report received",
+    "more": "{{count}} more new report(s) waiting",
+    "open": "Open report",
+    "dismiss": "Dismiss",
+    "pageTitle": "SpeakUp — new safety report"
+  },
   "table": {
     "number": "Report no.",
     "type": "Type",
@@ -246,11 +270,15 @@
   "admin": {
     "createUser": "Create user",
     "fullName": "Full name",
+    "email": "Email",
     "role": "Role",
     "department": "Department",
     "active": "Active",
     "inactive": "Inactive",
     "newPassword": "Temporary password",
+    "passwordHint": "SpeakUp will email the username and a temporary password. The user must set a new password after OTP login.",
+    "userCreated": "User created",
+    "credentialsEmailed": "Username and temporary password were sent to {{email}}.",
     "qrPrint": "Print these codes and post them at the matching site.",
     "auditLead": "Every privileged action is recorded.",
     "saveSettings": "Save settings"

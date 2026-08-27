@@ -28,6 +28,11 @@ async function requireAuth(req, _res, next) {
   }
 }
 
+function requirePasswordSet(req, _res, next) {
+  if (!req.user?.mustChangePassword) return next();
+  return next(new ForbiddenError('You must set a new password before continuing'));
+}
+
 function requireRoles(...roles) {
   return (req, _res, next) => {
     if (!req.user) return next(new UnauthorizedError());
@@ -36,4 +41,4 @@ function requireRoles(...roles) {
   };
 }
 
-module.exports = { optionalAuth, requireAuth, requireRoles };
+module.exports = { optionalAuth, requireAuth, requireRoles, requirePasswordSet };

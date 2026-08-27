@@ -6,10 +6,23 @@ const rateLimit = require('express-rate-limit');
 const { env } = require('./config/env');
 const { buildRouter } = require('./interfaces/http/routes');
 const { errorHandler, notFound } = require('./interfaces/http/middleware/error');
+const { ensureAuthSchema } = require('./infrastructure/database/migrate');
+
+let schemaReady;
 
 function createApp() {
   const app = express();
   app.set('trust proxy', 1);
+
+  app.use(async (req, res, next) => {
+    try {
+      schemaReady = schemaReady || ensureAuthSchema();
+      await schemaReady;
+      next();
+    } catch (err) {
+      next(err);
+    }
+  });
 
   app.use(
     helmet({

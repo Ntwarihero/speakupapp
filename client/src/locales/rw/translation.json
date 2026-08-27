@@ -62,7 +62,21 @@
     "show": "Erekana",
     "hide": "Hisha",
     "failed": "Kwinjira byanze",
-    "sessionExpired": "Igihe cyarangiye. Ongera winjire."
+    "sessionExpired": "Igihe cyarangiye. Ongera winjire.",
+    "otpTitle": "Andika kode yo kwemeza",
+    "otpText": "Twohereje kode y'imibare 6 kuri {{email}}. Irangira mu minota 10.",
+    "otpLabel": "Kode OTP",
+    "otpConfirm": "Emeza ukomeze",
+    "otpResend": "Ohereza indi kode",
+    "otpWait": "Ongera wohereze mu {{seconds}}s",
+    "setPasswordTitle": "Shyiraho ijambo ry'ibanga rishya",
+    "setPasswordText": "Muraho {{name}}. Hindura ijambo ry'ibanga ry'agateganyo mbere yo gukoresha SpeakUp.",
+    "currentPassword": "Ijambo ry'ibanga rya none",
+    "newPassword": "Ijambo ry'ibanga rishya",
+    "confirmPassword": "Emeza ijambo ry'ibanga",
+    "setPasswordSave": "Bika ijambo ry'ibanga",
+    "setPasswordMismatch": "Amagambo y'ibanga ntabwo ahuye",
+    "setPasswordDone": "Ijambo ry'ibanga ryahinduwe"
   },
   "home": {
     "publicTitle": "Tanga raporo y'umutekano",
@@ -186,6 +200,16 @@
     "assigned": "Zahawe",
     "noData": "Nta makuru"
   },
+  "alerts": {
+    "live": "Bikora",
+    "liveHint": "Kurikirana raporo nshya za SpeakUp",
+    "kicker": "SpeakUp · HSSE",
+    "title": "Raporo nshya y'umutekano yageze",
+    "more": "Andi {{count}} raporo nshya irategereje",
+    "open": "Fungura raporo",
+    "dismiss": "Hagarika",
+    "pageTitle": "SpeakUp — raporo nshya"
+  },
   "table": {
     "number": "Numero",
     "type": "Ubwoko",
@@ -246,11 +270,15 @@
   "admin": {
     "createUser": "Ongeraho umukoresha",
     "fullName": "Amazina",
+    "email": "Imeri",
     "role": "Uruhare",
     "department": "Ishami",
     "active": "Akora",
     "inactive": "Ntakora",
     "newPassword": "Ijambo ry'ibanga ry'agateganyo",
+    "passwordHint": "SpeakUp yohereza izina n'ijambo ry'ibanga ry'agateganyo kuri imeri. Umukoresha agomba gushyiraho irindi nyuma ya OTP.",
+    "userCreated": "Umukoresha yongerewe",
+    "credentialsEmailed": "Izina n'ijambo ry'ibanga byoherejwe kuri {{email}}.",
     "qrPrint": "Sohora izi kode ushyire ku hantu bijyanye.",
     "auditLead": "Igikorwa cyose cy'ubuyobozi kirandikwa.",
     "saveSettings": "Bika igenamiterere"

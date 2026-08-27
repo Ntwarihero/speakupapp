@@ -32,8 +32,22 @@ CREATE TABLE IF NOT EXISTS users (
   created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by      CHAR(36)      NULL,
+  must_change_password TINYINT(1) NOT NULL DEFAULT 0,
   INDEX idx_users_role (role),
   INDEX idx_users_active (is_active)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS login_otps (
+  id              CHAR(36)      NOT NULL PRIMARY KEY,
+  user_id         CHAR(36)      NOT NULL,
+  otp_hash        VARCHAR(255)  NOT NULL,
+  expires_at      DATETIME      NOT NULL,
+  consumed_at     DATETIME      NULL,
+  attempts        INT           NOT NULL DEFAULT 0,
+  created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_otp_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_otp_user (user_id),
+  INDEX idx_otp_expires (expires_at)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (

@@ -101,10 +101,24 @@ export function UsersPage() {
   const create = async (e) => {
     e.preventDefault();
     const body = Object.fromEntries(new FormData(e.target).entries());
-    await api.post('/admin/users', body);
-    e.target.reset();
-    Swal.fire({ icon: 'success', timer: 1000, showConfirmButton: false });
-    load();
+    try {
+      const { data } = await api.post('/admin/users', body);
+      e.target.reset();
+      Swal.fire({
+        icon: 'success',
+        title: t('admin.userCreated'),
+        text: t('admin.credentialsEmailed', { email: data.user.email }),
+        confirmButtonColor: '#5C2D91',
+      });
+      load();
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: t('common.error'),
+        text: err.response?.data?.error?.message || t('common.error'),
+        confirmButtonColor: '#5C2D91',
+      });
+    }
   };
 
   return (
@@ -113,7 +127,7 @@ export function UsersPage() {
       <form className="card-speak p-3 mb-4 row g-2" onSubmit={create}>
         <div className="col-md-3"><input className="form-control" name="fullName" placeholder={t('admin.fullName')} required /></div>
         <div className="col-md-2"><input className="form-control" name="username" placeholder={t('auth.username')} required /></div>
-        <div className="col-md-2"><input className="form-control" name="email" type="email" required /></div>
+        <div className="col-md-3"><input className="form-control" name="email" type="email" placeholder={t('admin.email')} required /></div>
         <div className="col-md-2">
           <select className="form-select" name="role" defaultValue="employee">
             {['employee', 'safety_officer', 'safety_manager', 'administrator'].map((r) => (
@@ -121,8 +135,8 @@ export function UsersPage() {
             ))}
           </select>
         </div>
-        <div className="col-md-2"><input className="form-control" name="password" placeholder={t('admin.newPassword')} required minLength={8} /></div>
-        <div className="col-md-1"><button className="btn btn-dpw w-100" type="submit">+</button></div>
+        <div className="col-md-2"><button className="btn btn-dpw w-100" type="submit">{t('admin.createUser')}</button></div>
+        <div className="col-12"><p className="small text-muted mb-0">{t('admin.passwordHint')}</p></div>
       </form>
       <div className="card-speak table-responsive">
         <table className="table mb-0">

@@ -62,7 +62,21 @@
     "show": "Afficher",
     "hide": "Masquer",
     "failed": "Échec de connexion",
-    "sessionExpired": "Session terminée. Veuillez vous reconnecter."
+    "sessionExpired": "Session terminée. Veuillez vous reconnecter.",
+    "otpTitle": "Code de vérification",
+    "otpText": "Nous avons envoyé un code à 6 chiffres à {{email}}. Il expire dans 10 minutes.",
+    "otpLabel": "Code OTP",
+    "otpConfirm": "Vérifier et continuer",
+    "otpResend": "Envoyer un nouveau code",
+    "otpWait": "Renvoyer dans {{seconds}} s",
+    "setPasswordTitle": "Définir un nouveau mot de passe",
+    "setPasswordText": "Bonjour {{name}}. Remplacez le mot de passe temporaire avant d’utiliser SpeakUp.",
+    "currentPassword": "Mot de passe temporaire / actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "setPasswordSave": "Enregistrer le mot de passe",
+    "setPasswordMismatch": "Les nouveaux mots de passe ne correspondent pas",
+    "setPasswordDone": "Mot de passe mis à jour"
   },
   "home": {
     "publicTitle": "Signaler un problème de sécurité",
@@ -186,6 +200,16 @@
     "assigned": "Assignés",
     "noData": "Pas encore de données"
   },
+  "alerts": {
+    "live": "En direct",
+    "liveHint": "Surveillance des nouveaux rapports SpeakUp",
+    "kicker": "SpeakUp · HSSE",
+    "title": "Nouveau rapport de sécurité reçu",
+    "more": "{{count}} autre(s) nouveau(x) rapport(s) en attente",
+    "open": "Ouvrir le rapport",
+    "dismiss": "Fermer",
+    "pageTitle": "SpeakUp — nouveau rapport"
+  },
   "table": {
     "number": "N° rapport",
     "type": "Type",
@@ -246,11 +270,15 @@
   "admin": {
     "createUser": "Créer un utilisateur",
     "fullName": "Nom complet",
+    "email": "E-mail",
     "role": "Rôle",
     "department": "Service",
     "active": "Actif",
     "inactive": "Inactif",
     "newPassword": "Mot de passe temporaire",
+    "passwordHint": "SpeakUp enverra le nom d’utilisateur et un mot de passe temporaire par e-mail. L’utilisateur devra en définir un nouveau après l’OTP.",
+    "userCreated": "Utilisateur créé",
+    "credentialsEmailed": "Le nom d’utilisateur et le mot de passe temporaire ont été envoyés à {{email}}.",
     "qrPrint": "Imprimez ces codes et affichez-les sur les sites correspondants.",
     "auditLead": "Chaque action privilégiée est enregistrée.",
     "saveSettings": "Enregistrer les paramètres"

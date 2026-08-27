@@ -62,7 +62,21 @@
     "show": "Onyesha",
     "hide": "Ficha",
     "failed": "Kuingia kumeshindikana",
-    "sessionExpired": "Kipindi kimeisha. Ingia tena."
+    "sessionExpired": "Kipindi kimeisha. Ingia tena.",
+    "otpTitle": "Weka nambari ya uthibitisho",
+    "otpText": "Tumepeleka nambari ya tarakimu 6 kwa {{email}}. Inaisha baada ya dakika 10.",
+    "otpLabel": "Kodi ya OTP",
+    "otpConfirm": "Thibitisha na endelea",
+    "otpResend": "Tuma nambari mpya",
+    "otpWait": "Tuma tena baada ya {{seconds}}s",
+    "setPasswordTitle": "Weka nenosiri jipya",
+    "setPasswordText": "Habari {{name}}. Badilisha nenosiri la muda kabla ya kutumia SpeakUp.",
+    "currentPassword": "Nenosiri la sasa",
+    "newPassword": "Nenosiri jipya",
+    "confirmPassword": "Thibitisha nenosiri",
+    "setPasswordSave": "Hifadhi nenosiri",
+    "setPasswordMismatch": "Manenosiri mapya hayafanani",
+    "setPasswordDone": "Nenosiri limesasishwa"
   },
   "home": {
     "publicTitle": "Ripoti suala la usalama",
@@ -186,6 +200,16 @@
     "assigned": "Zilizokabidhiwa",
     "noData": "Hakuna data bado"
   },
+  "alerts": {
+    "live": "Moja kwa moja",
+    "liveHint": "Inafuatilia ripoti mpya za SpeakUp",
+    "kicker": "SpeakUp · HSSE",
+    "title": "Ripoti mpya ya usalama imepokelewa",
+    "more": "Ripoti nyingine {{count}} mpya inasubiri",
+    "open": "Fungua ripoti",
+    "dismiss": "Funga",
+    "pageTitle": "SpeakUp — ripoti mpya"
+  },
   "table": {
     "number": "Namba",
     "type": "Aina",
@@ -246,11 +270,15 @@
   "admin": {
     "createUser": "Tengeneza mtumiaji",
     "fullName": "Jina kamili",
+    "email": "Barua pepe",
     "role": "Wajibu",
     "department": "Idara",
     "active": "Hai",
     "inactive": "Si hai",
     "newPassword": "Nenosiri la muda",
+    "passwordHint": "SpeakUp itatuma jina la mtumiaji na nenosiri la muda kwa barua pepe. Mtumiaji lazima aweke nenosiri jipya baada ya OTP.",
+    "userCreated": "Mtumiaji ameundwa",
+    "credentialsEmailed": "Jina la mtumiaji na nenosiri la muda vimetumwa kwa {{email}}.",
     "qrPrint": "Chapisha misimbo hii na ibandike kwenye maeneo husika.",
     "auditLead": "Kila kitendo cha mamlaka kinaandikwa.",
     "saveSettings": "Hifadhi mipangilio"

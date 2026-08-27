@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import BrandMark from './BrandMark';
 import LanguageSwitcher from './LanguageSwitcher';
+import IncomingReportAlerts from './IncomingReportAlerts';
 
 const LINKS = {
   employee: [
@@ -66,6 +67,7 @@ export default function AppLayout() {
             {user?.fullName} · {t(`roles.${user?.role}`)}
           </div>
           <div className="d-flex align-items-center gap-2">
+            <IncomingReportAlerts />
             <LanguageSwitcher variant="dark" />
             <button
               className="btn btn-outline-dpw btn-sm"
