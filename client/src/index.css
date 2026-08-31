@@ -87,6 +87,47 @@ a { color: var(--dpw-purple); }
   color: #fff;
 }
 
+.btn-icon-action {
+  position: relative;
+  width: 52px;
+  min-width: 52px;
+  min-height: 48px;
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.btn-icon-action.btn-lg {
+  width: 64px;
+  min-width: 64px;
+  min-height: 52px;
+  font-size: 1.35rem;
+}
+.btn-icon-action[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  background: var(--dpw-purple-ink, #1e1233);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.btn-icon-action[data-tooltip]:hover::after,
+.btn-icon-action[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .form-control, .form-select {
   min-height: 44px;
   border-radius: 10px;

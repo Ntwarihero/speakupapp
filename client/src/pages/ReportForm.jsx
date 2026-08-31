@@ -318,12 +318,20 @@ export default function ReportForm() {
         <div className="mb-4">
           <label className="form-label">{t('report.images')}</label>
           <div className="d-flex flex-wrap gap-2 mb-2">
-            <label className="btn btn-outline-dpw mb-0">
-              {t('report.camera')}
+            <label
+              className="btn btn-outline-dpw btn-icon-action mb-0"
+              data-tooltip={t('report.camera')}
+              aria-label={t('report.camera')}
+            >
+              <i className="fa-solid fa-camera" aria-hidden="true" />
               <input type="file" accept="image/*" capture="environment" hidden multiple onChange={(e) => onFiles(e.target.files)} />
             </label>
-            <label className="btn btn-outline-dpw mb-0">
-              {t('report.gallery')}
+            <label
+              className="btn btn-outline-dpw btn-icon-action mb-0"
+              data-tooltip={t('report.gallery')}
+              aria-label={t('report.gallery')}
+            >
+              <i className="fa-solid fa-upload" aria-hidden="true" />
               <input type="file" accept="image/*" hidden multiple onChange={(e) => onFiles(e.target.files)} />
             </label>
           </div>
@@ -335,8 +343,18 @@ export default function ReportForm() {
             ))}
           </div>
         </div>
-        <button className="btn btn-dpw btn-lg" disabled={busy} type="submit">
-          {busy ? t('report.submitting') : t('report.submit')}
+        <button
+          className="btn btn-dpw btn-lg btn-icon-action"
+          disabled={busy}
+          type="submit"
+          data-tooltip={busy ? t('report.submitting') : t('report.submit')}
+          aria-label={busy ? t('report.submitting') : t('report.submit')}
+        >
+          {busy ? (
+            <i className="fa-solid fa-spinner fa-spin" aria-hidden="true" />
+          ) : (
+            <i className="fa-solid fa-paper-plane" aria-hidden="true" />
+          )}
         </button>
       </form>
     </div>
