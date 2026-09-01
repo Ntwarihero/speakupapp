@@ -430,12 +430,6 @@ a { color: var(--dpw-purple); }
   font-weight: 700;
   font-size: 1.15rem;
 }
-.poster-url {
-  font-family: var(--font-data);
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.75);
-  word-break: break-all;
-}
 .poster-langs {
   display: flex;
   flex-wrap: wrap;
@@ -446,9 +440,23 @@ a { color: var(--dpw-purple); }
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #5c2d91 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   .no-print { display: none !important; }
+  .poster-pack { background: transparent; }
   .poster-page {
     min-height: 100vh;
+    width: 100%;
+    margin: 0;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

@@ -34,6 +34,13 @@ export default function PrintPosters() {
     };
   }, [cleanUrl]);
 
+  const printPoster = () => {
+    const original = document.title;
+    document.title = ' ';
+    window.print();
+    document.title = original;
+  };
+
   return (
     <div className="poster-pack">
       <div className="no-print p-3 p-md-4" style={{ background: '#f4f1f8' }}>
@@ -58,7 +65,7 @@ export default function PrintPosters() {
             {' '}
             <a href={LIVE_APP_URL} target="_blank" rel="noreferrer">{LIVE_APP_URL}</a>
           </p>
-          <button type="button" className="btn btn-dpw" onClick={() => window.print()}>
+          <button type="button" className="btn btn-dpw" onClick={printPoster}>
             Print poster
           </button>
         </div>
@@ -82,7 +89,6 @@ export default function PrintPosters() {
             )}
           </div>
           <p className="poster-scan">Scan this code to SpeakUp</p>
-          <p className="poster-url">{cleanUrl}</p>
           <div className="poster-langs">
             <span>English</span>
             <span>Français</span>
