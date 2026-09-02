@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-          includeAssets: ['favicon.svg', 'dp-world-logo.svg'],
+          includeAssets: ['favicon.svg', 'dp-world-logo.svg', 'dp-world-qr-badge.svg'],
       manifest: {
         name: 'SpeakUp — DP World Kigali',
         short_name: 'SpeakUp',

@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import QRCode from 'qrcode';
+import { useMemo, useState } from 'react';
 import BrandMark from '../components/BrandMark';
+import BrandedQr from '../components/BrandedQr';
 import { LIVE_APP_URL } from '../data/sites';
 
 export default function PrintPosters() {
   const [target, setTarget] = useState(LIVE_APP_URL);
-  const [qr, setQr] = useState('');
 
   const cleanUrl = useMemo(() => {
     try {
@@ -18,21 +17,6 @@ export default function PrintPosters() {
       return LIVE_APP_URL;
     }
   }, [target]);
-
-  useEffect(() => {
-    let cancelled = false;
-    QRCode.toDataURL(cleanUrl, {
-      width: 900,
-      margin: 1,
-      color: { dark: '#5C2D91', light: '#FFFFFF' },
-      errorCorrectionLevel: 'H',
-    }).then((data) => {
-      if (!cancelled) setQr(data);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [cleanUrl]);
 
   const printPoster = () => {
     const original = document.title;
@@ -81,19 +65,10 @@ export default function PrintPosters() {
             Report hazards, unsafe acts, near misses and operational risks before they become
             incidents.
           </p>
-          <div className="poster-qr-wrap poster-qr-lg">
-            {qr ? (
-              <>
-                <img className="poster-qr-code" src={qr} alt="SpeakUp QR code" />
-                <div className="poster-qr-logo" aria-hidden="true">
-                  <img src="/dp-world-logo.svg" alt="" />
-                </div>
-              </>
-            ) : (
-              <div className="poster-qr-wait">Preparing QR…</div>
-            )}
+          <div className="poster-qr-card">
+            <BrandedQr data={cleanUrl} />
+            <p className="poster-qr-caption">Scan this code to SpeakUp</p>
           </div>
-          <p className="poster-scan">Scan this code to SpeakUp</p>
           <div className="poster-langs">
             <span>English</span>
             <span>Français</span>
