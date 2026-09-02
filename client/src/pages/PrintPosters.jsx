@@ -83,7 +83,12 @@ export default function PrintPosters() {
           </p>
           <div className="poster-qr-wrap poster-qr-lg">
             {qr ? (
-              <img src={qr} alt="SpeakUp QR code" />
+              <>
+                <img className="poster-qr-code" src={qr} alt="SpeakUp QR code" />
+                <div className="poster-qr-logo" aria-hidden="true">
+                  <img src="/dp-world-logo.svg" alt="" />
+                </div>
+              </>
             ) : (
               <div className="poster-qr-wait">Preparing QR…</div>
             )}

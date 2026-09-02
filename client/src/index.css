@@ -418,12 +418,32 @@ a { color: var(--dpw-purple); }
   margin-bottom: 24px;
 }
 .poster-qr-wrap {
+  position: relative;
   width: min(320px, 70vw);
   background: #fff;
   padding: 14px;
   border-radius: 18px;
 }
-.poster-qr-wrap img { width: 100%; height: auto; display: block; }
+.poster-qr-wrap .poster-qr-code { width: 100%; height: auto; display: block; }
+.poster-qr-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 23%;
+  background: #fff;
+  border-radius: 16%;
+  padding: 2.4%;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 3px #fff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.poster-qr-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .poster-qr-wait { color: #5c2d91; padding: 80px 0; text-align: center; }
 .poster-scan {
   margin: 18px 0 6px;
