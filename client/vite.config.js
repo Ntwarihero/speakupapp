@@ -7,7 +7,31 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-          includeAssets: ['favicon.svg', 'dp-world-logo.svg', 'dp-world-qr-badge.svg'],
+      injectRegister: false,
+      includeAssets: ['favicon.svg', 'dp-world-logo.svg', 'dp-world-qr-badge.svg'],
+      workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+        navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api\//],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webmanifest}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'speakup-pages',
+              networkTimeoutSeconds: 4,
+              expiration: { maxEntries: 8, maxAgeSeconds: 60 * 10 },
+            },
+          },
+          {
+            urlPattern: /\/api\//,
+            handler: 'NetworkOnly',
+          },
+        ],
+      },
       manifest: {
         name: 'SpeakUp — DP World Kigali',
         short_name: 'SpeakUp',
