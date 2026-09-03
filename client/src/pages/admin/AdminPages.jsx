@@ -175,7 +175,10 @@ export function UsersPage() {
 export function LocationsPage() {
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
-  const load = () => api.get('/admin/locations').then((r) => setRows(r.data.locations));
+  const load = () =>
+    api.get('/admin/locations')
+      .then((r) => setRows(Array.isArray(r.data.locations) ? r.data.locations : []))
+      .catch(() => setRows([]));
   useEffect(() => { load(); }, []);
   return (
     <div>

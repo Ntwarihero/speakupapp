@@ -75,6 +75,14 @@ async function analytics(req, res, next) {
   }
 }
 
+async function publicLocations(_req, res, next) {
+  try {
+    res.json({ locations: await AdminService.listActiveLocations() });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function lookups(_req, res, next) {
   try {
     res.json(await AdminService.lookups());
@@ -174,6 +182,7 @@ module.exports = {
   updateAction,
   analytics,
   lookups,
+  publicLocations,
   locations,
   categories,
   announcements,

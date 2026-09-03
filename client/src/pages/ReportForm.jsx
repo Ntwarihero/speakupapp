@@ -42,6 +42,7 @@ export default function ReportForm() {
   const [params] = useSearchParams();
   const moduleName = params.get('module') || 'general';
   const [lookups, setLookups] = useState({ locations: [], categories: [] });
+  const [locationLoad, setLocationLoad] = useState('loading');
   const [busy, setBusy] = useState(false);
   const [previews, setPreviews] = useState([]);
   const [form, setForm] = useState({
@@ -74,30 +75,24 @@ export default function ReportForm() {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    api.get('/lookups')
-      .then(({ data }) => {
-        if (cancelled) return;
-        setLookups(data);
-        const match = data.locations.find((l) => l.qr_slug === qrLocation);
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const { data } = await api.get('/locations', { signal: controller.signal });
+        const locations = Array.isArray(data?.locations) ? data.locations : [];
+        setLookups((prev) => ({ ...prev, locations }));
+        setLocationLoad(locations.length ? 'ready' : 'empty');
+        const match = locations.find((l) => l.qr_slug === qrLocation);
         if (match) {
           setForm((f) => applySiteCoords(match, { ...f, locationId: match.id }));
         }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          Swal.fire({
-            icon: 'error',
-            title: t('common.error'),
-            text: 'Locations could not be loaded. Refresh the page.',
-            confirmButtonColor: '#5C2D91',
-          });
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [qrLocation, t]);
+      } catch (err) {
+        if (err.code === 'ERR_CANCELED' || err.name === 'CanceledError') return;
+        setLocationLoad('error');
+      }
+    })();
+    return () => controller.abort();
+  }, [qrLocation]);
 
   const selectedLoc = useMemo(
     () => lookups.locations.find((l) => l.id === form.locationId),
@@ -256,8 +251,12 @@ export default function ReportForm() {
                 setForm((f) => applySiteCoords(loc, { ...f, locationId }));
               }}
               required
+              disabled={locationLoad !== 'ready'}
             >
-              <option value="">{t('report.location')}</option>
+              {locationLoad === 'loading' && <option value="">Loading locations…</option>}
+              {locationLoad === 'error' && <option value="">Locations unavailable — refresh</option>}
+              {locationLoad === 'empty' && <option value="">No locations found</option>}
+              {locationLoad === 'ready' && <option value="">{t('report.location')}</option>}
               {lookups.locations.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.name}

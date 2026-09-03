@@ -16,11 +16,16 @@ function createApp() {
 
   app.use(async (req, res, next) => {
     try {
-      schemaReady = schemaReady || ensureAuthSchema();
+      schemaReady =
+        schemaReady ||
+        ensureAuthSchema().catch((err) => {
+          console.error('ensureAuthSchema', err.message);
+        });
       await schemaReady;
       next();
     } catch (err) {
-      next(err);
+      console.error('schema gate', err.message);
+      next();
     }
   });
 

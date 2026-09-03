@@ -94,17 +94,35 @@ async function updateSettings(entries, actor) {
   return getSettings();
 }
 
+async function listActiveLocations() {
+  const rows = await query(
+    'SELECT id, code, name, qr_slug, latitude, longitude FROM locations WHERE is_active = 1 ORDER BY sort_order, name'
+  );
+  return Array.isArray(rows) ? rows : [];
+}
+
 async function lookups() {
   const [locations, categories, officers] = await Promise.all([
-    query('SELECT id, code, name, qr_slug, latitude, longitude FROM locations WHERE is_active = 1 ORDER BY sort_order'),
-    query('SELECT id, code, name, module FROM report_categories WHERE is_active = 1 ORDER BY sort_order'),
+    listActiveLocations(),
+    query('SELECT id, code, name, module FROM report_categories WHERE is_active = 1 ORDER BY sort_order').catch((err) => {
+      console.error('lookups categories', err.message);
+      return [];
+    }),
     query(
       `SELECT id, full_name, department, role FROM users
-       WHERE is_active = 1 AND role IN ('safety_officer','safety_manager','employee')
-       ORDER BY full_name`
-    ),
+       WHERE is_active = 1 AND role IN (?, ?, ?)
+       ORDER BY full_name`,
+      ['safety_officer', 'safety_manager', 'employee']
+    ).catch((err) => {
+      console.error('lookups officers', err.message);
+      return [];
+    }),
   ]);
-  return { locations, categories, officers };
+  return {
+    locations,
+    categories: Array.isArray(categories) ? categories : [],
+    officers: Array.isArray(officers) ? officers : [],
+  };
 }
 
 async function requireLocation(id) {
@@ -115,6 +133,7 @@ async function requireLocation(id) {
 
 module.exports = {
   listLocations,
+  listActiveLocations,
   upsertLocation,
   listCategories,
   upsertCategory,

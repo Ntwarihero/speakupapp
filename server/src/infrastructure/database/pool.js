@@ -9,13 +9,15 @@ const pool = mysql.createPool({
   database: env.db.database,
   waitForConnections: true,
   connectionLimit: process.env.VERCEL ? 4 : 12,
+  connectTimeout: 8000,
   namedPlaceholders: true,
   timezone: 'Z',
   charset: 'utf8mb4',
+  enableKeepAlive: true,
   ssl: env.dbSsl ? { rejectUnauthorized: false } : undefined,
 });
 
-async function query(sql, params) {
+async function query(sql, params = []) {
   const [rows] = await pool.query(sql, params);
   return rows;
 }

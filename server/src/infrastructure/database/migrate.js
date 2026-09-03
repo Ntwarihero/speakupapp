@@ -47,24 +47,27 @@ async function migrate() {
 
 async function ensureAuthSchema() {
   const ssl = env.dbSsl ? { rejectUnauthorized: false } : undefined;
-  const conn = await mysql.createConnection({
-    host: env.db.host,
-    port: env.db.port,
-    user: env.db.user,
-    password: env.db.password,
-    database: env.db.database,
-    ssl,
-  });
+  let conn;
   try {
-    await conn.query(
-      'ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0'
-    );
-  } catch (err) {
-    if (!/Duplicate column|ER_DUP_FIELDNAME/i.test(err.message)) {
-      throw err;
+    conn = await mysql.createConnection({
+      host: env.db.host,
+      port: env.db.port,
+      user: env.db.user,
+      password: env.db.password,
+      database: env.db.database,
+      connectTimeout: 8000,
+      ssl,
+    });
+    try {
+      await conn.query(
+        'ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0'
+      );
+    } catch (err) {
+      if (!/Duplicate column|ER_DUP_FIELDNAME/i.test(err.message)) {
+        console.error('must_change_password column:', err.message);
+      }
     }
-  }
-  await conn.query(`
+    await conn.query(`
     CREATE TABLE IF NOT EXISTS login_otps (
       id CHAR(36) NOT NULL PRIMARY KEY,
       user_id CHAR(36) NOT NULL,
@@ -79,16 +82,20 @@ async function ensureAuthSchema() {
       INDEX idx_otp_expires (expires_at)
     ) ENGINE=InnoDB
   `);
-  try {
-    await conn.query(
-      "ALTER TABLE login_otps ADD COLUMN purpose VARCHAR(20) NOT NULL DEFAULT 'login'"
-    );
-  } catch (err) {
-    if (!/Duplicate column|ER_DUP_FIELDNAME/i.test(err.message)) {
-      throw err;
+    try {
+      await conn.query(
+        "ALTER TABLE login_otps ADD COLUMN purpose VARCHAR(20) NOT NULL DEFAULT 'login'"
+      );
+    } catch (err) {
+      if (!/Duplicate column|ER_DUP_FIELDNAME/i.test(err.message)) {
+        console.error('login_otps purpose column:', err.message);
+      }
     }
+  } catch (err) {
+    console.error('ensureAuthSchema:', err.message);
+  } finally {
+    if (conn) await conn.end().catch(() => {});
   }
-  await conn.end();
 }
 
 if (require.main === module) {
