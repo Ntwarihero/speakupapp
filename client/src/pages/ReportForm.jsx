@@ -62,13 +62,42 @@ export default function ReportForm() {
     extra: {},
   });
 
+  const applySiteCoords = (location, current) => {
+    if (!location || location.latitude == null || location.longitude == null || location.latitude === '') {
+      return current;
+    }
+    return {
+      ...current,
+      latitude: Number(location.latitude),
+      longitude: Number(location.longitude),
+    };
+  };
+
   useEffect(() => {
-    api.get('/lookups').then(({ data }) => {
-      setLookups(data);
-      const match = data.locations.find((l) => l.qr_slug === qrLocation);
-      if (match) setForm((f) => ({ ...f, locationId: match.id }));
-    });
-  }, [qrLocation]);
+    let cancelled = false;
+    api.get('/lookups')
+      .then(({ data }) => {
+        if (cancelled) return;
+        setLookups(data);
+        const match = data.locations.find((l) => l.qr_slug === qrLocation);
+        if (match) {
+          setForm((f) => applySiteCoords(match, { ...f, locationId: match.id }));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          Swal.fire({
+            icon: 'error',
+            title: t('common.error'),
+            text: 'Locations could not be loaded. Refresh the page.',
+            confirmButtonColor: '#5C2D91',
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [qrLocation, t]);
 
   const selectedLoc = useMemo(
     () => lookups.locations.find((l) => l.id === form.locationId),
@@ -218,8 +247,17 @@ export default function ReportForm() {
           </div>
           <div className="col-md-4">
             <label className="form-label">{t('report.location')} *</label>
-            <select className="form-select" value={form.locationId} onChange={(e) => set('locationId', e.target.value)} required>
-              <option value="">{t('common.filter')}</option>
+            <select
+              className="form-select"
+              value={form.locationId}
+              onChange={(e) => {
+                const locationId = e.target.value;
+                const loc = lookups.locations.find((l) => l.id === locationId);
+                setForm((f) => applySiteCoords(loc, { ...f, locationId }));
+              }}
+              required
+            >
+              <option value="">{t('report.location')}</option>
               {lookups.locations.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.name}
@@ -314,7 +352,11 @@ export default function ReportForm() {
             </div>
           </div>
         </div>
-        {form.latitude && <div className="mb-3"><ReportMap lat={Number(form.latitude)} lng={Number(form.longitude)} /></div>}
+        {form.latitude && form.longitude ? (
+          <div className="mb-3">
+            <ReportMap lat={Number(form.latitude)} lng={Number(form.longitude)} label={selectedLoc?.name} />
+          </div>
+        ) : null}
         <div className="mb-4">
           <label className="form-label">{t('report.images')}</label>
           <div className="d-flex flex-wrap gap-2 mb-2">

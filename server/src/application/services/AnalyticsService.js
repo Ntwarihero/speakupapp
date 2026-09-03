@@ -37,9 +37,11 @@ async function kpis() {
      FROM reports GROUP BY CASE WHEN status = 'closed' THEN 'Closed' ELSE 'Open' END`
   );
   const heatmap = await query(
-    `SELECT r.latitude AS lat, r.longitude AS lng, r.severity, r.report_no AS reportNo, l.name AS locationName
+    `SELECT COALESCE(r.latitude, l.latitude) AS lat, COALESCE(r.longitude, l.longitude) AS lng,
+            r.severity, r.report_no AS reportNo, l.name AS locationName
      FROM reports r JOIN locations l ON l.id = r.location_id
-     WHERE r.latitude IS NOT NULL AND r.longitude IS NOT NULL`
+     WHERE COALESCE(r.latitude, l.latitude) IS NOT NULL
+       AND COALESCE(r.longitude, l.longitude) IS NOT NULL`
   );
   const team = await query(
     `SELECT u.full_name AS name, u.role,

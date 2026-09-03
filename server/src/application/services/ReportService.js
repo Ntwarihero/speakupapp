@@ -94,10 +94,20 @@ async function loadHistory(reportId) {
   );
 }
 
+function toCoord(value) {
+  if (value === '' || value == null) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 async function createReport(payload, files, actor) {
   if (PUBLIC_CATEGORIES.includes(payload.reporterCategory) && actor) {
     /* public users may still be logged in later; allow */
   }
+  const locations = await query('SELECT id, latitude, longitude FROM locations WHERE id = ?', [payload.locationId]);
+  if (!locations[0]) throw new NotFoundError('Location not found');
+  const latitude = toCoord(payload.latitude) ?? toCoord(locations[0].latitude);
+  const longitude = toCoord(payload.longitude) ?? toCoord(locations[0].longitude);
   const report = await withTransaction(async (conn) => {
     const id = uuid();
     const reportNo = await nextReportNo(conn);
@@ -125,8 +135,8 @@ async function createReport(payload, files, actor) {
         payload.locationId,
         payload.locationOther || null,
         payload.description,
-        payload.latitude || null,
-        payload.longitude || null,
+        latitude,
+        longitude,
         payload.occurredAt || new Date(),
         extra,
       ]
