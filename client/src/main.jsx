@@ -10,12 +10,10 @@ import './index.css';
 import App from './App';
 import { registerSW } from 'virtual:pwa-register';
 
-registerSW({
+const updateSW = registerSW({
   immediate: true,
-  onRegisteredSW(_url, registration) {
-    if (!registration) return;
-    registration.update();
-    setInterval(() => registration.update(), 5 * 60 * 1000);
+  onNeedRefresh() {
+    updateSW(true);
   },
 });
 

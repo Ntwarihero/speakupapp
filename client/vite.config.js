@@ -8,6 +8,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
+      selfDestroying: true,
       includeAssets: ['favicon.svg', 'dp-world-logo.svg', 'dp-world-qr-badge.svg'],
       workbox: {
         skipWaiting: true,
