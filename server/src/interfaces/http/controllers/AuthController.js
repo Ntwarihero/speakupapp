@@ -33,6 +33,11 @@ const resetRules = [
   validate,
 ];
 
+const alertSsoRules = [
+  body('token').trim().notEmpty().withMessage('Alert link is required'),
+  validate,
+];
+
 async function login(req, res, next) {
   try {
     const result = await AuthService.login({
@@ -133,6 +138,29 @@ async function resetPassword(req, res, next) {
   }
 }
 
+async function alertSso(req, res, next) {
+  try {
+    const result = await AuthService.consumeAlertLink({
+      token: req.body.token,
+      ip: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+    req.user = result.user;
+    try {
+      await writeAudit(req, {
+        action: 'alert_sso',
+        entity: 'report',
+        entityId: result.reportId,
+      });
+    } catch (auditErr) {
+      console.warn('alert sso audit skipped', auditErr.message);
+    }
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function me(req, res) {
   res.json({ user: req.user });
 }
@@ -174,6 +202,7 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
+  alertSso,
   me,
   listUsers,
   createUser,
@@ -183,4 +212,5 @@ module.exports = {
   changePasswordRules,
   forgotRules,
   resetRules,
+  alertSsoRules,
 };

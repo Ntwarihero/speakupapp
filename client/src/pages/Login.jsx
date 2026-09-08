@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 import { useAuth } from '../context/AuthContext';
 import BrandMark from '../components/BrandMark';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { rememberNextPath, safeAppPath } from '../utils/safePath';
 
 export default function Login() {
   const { t } = useTranslation();
-  const { login, verifyOtp, resendOtp } = useAuth();
+  const { user, ready, login, verifyOtp, resendOtp } = useAuth();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const nextPath = safeAppPath(params.get('next'));
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
@@ -18,6 +21,20 @@ export default function Login() {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+
+  const goAfterAuth = useCallback((authedUser) => {
+    if (authedUser?.mustChangePassword) {
+      rememberNextPath(nextPath);
+      navigate('/app/set-password', { replace: true });
+      return;
+    }
+    navigate(nextPath, { replace: true });
+  }, [navigate, nextPath]);
+
+  useEffect(() => {
+    if (!ready || !user) return;
+    goAfterAuth(user);
+  }, [ready, user, goAfterAuth]);
 
   useEffect(() => {
     if (!cooldown) return undefined;
@@ -45,7 +62,7 @@ export default function Login() {
         setCooldown(60);
         return;
       }
-      navigate('/app');
+      goAfterAuth(data);
     } catch (err) {
       fail(err);
     } finally {
@@ -57,8 +74,8 @@ export default function Login() {
     e.preventDefault();
     setBusy(true);
     try {
-      const user = await verifyOtp(challengeId, otp);
-      navigate(user?.mustChangePassword ? '/app/set-password' : '/app');
+      const signedIn = await verifyOtp(challengeId, otp);
+      goAfterAuth(signedIn);
     } catch (err) {
       fail(err);
     } finally {

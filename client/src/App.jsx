@@ -6,6 +6,7 @@ import AppLayout, { PublicLayout } from './components/Layout';
 import PrintPosters from './pages/PrintPosters';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
+import AlertSso from './pages/AlertSso';
 import ForgotPassword from './pages/ForgotPassword';
 import PublicHome from './pages/PublicHome';
 import ReportForm from './pages/ReportForm';
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/" element={<Welcome />} />
             <Route path="/posters" element={<PrintPosters />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/alert" element={<AlertSso />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route element={<PublicLayout />}>
               <Route path="/home" element={<PublicHome />} />

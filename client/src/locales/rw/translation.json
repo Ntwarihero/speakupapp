@@ -90,7 +90,10 @@
     "resetSentText": "Niba konti ihari, kode yoherejwe kuri imeri yanditswe.",
     "resetDone": "Ijambo ry'ibanga ryahinduwe",
     "resetDoneText": "Injira n'ijambo rishya. Uzongera kubona OTP yo kwinjira.",
-    "backToLogin": "Subira ku kwinjira"
+    "backToLogin": "Subira ku kwinjira",
+    "alertLinkTitle": "Gufungura SAFETY ALERT",
+    "alertLinkText": "Turagufasha kwinjira kugira ngo usuzume iyi raporo.",
+    "alertLinkFailed": "Iyi link y'alerte ntikora cyangwa yarengeje igihe. Injira ukomeze."
   },
   "home": {
     "publicTitle": "Tanga raporo y'umutekano",

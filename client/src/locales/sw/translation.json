@@ -90,7 +90,10 @@
     "resetSentText": "Ikiwa akaunti ipo, nambari imetumwa kwa barua pepe iliyosajiliwa.",
     "resetDone": "Nenosiri limewekwa upya",
     "resetDoneText": "Ingia kwa nenosiri jipya. Bado utapokea OTP ya kuingia.",
-    "backToLogin": "Rudi kuingia"
+    "backToLogin": "Rudi kuingia",
+    "alertLinkTitle": "Inafungua SAFETY ALERT",
+    "alertLinkText": "Tunakuingiza ili uhakiki ripoti hii ya hatari.",
+    "alertLinkFailed": "Kiungo hiki cha tahadhari si sahihi au kimekwisha. Ingia ili kuendelea."
   },
   "home": {
     "publicTitle": "Ripoti suala la usalama",

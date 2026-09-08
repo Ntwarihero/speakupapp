@@ -90,7 +90,10 @@
     "resetSentText": "Si un compte existe, un code a été envoyé à l’e-mail enregistré.",
     "resetDone": "Mot de passe réinitialisé",
     "resetDoneText": "Connectez-vous avec le nouveau mot de passe. Un OTP de connexion sera encore envoyé.",
-    "backToLogin": "Retour à la connexion"
+    "backToLogin": "Retour à la connexion",
+    "alertLinkTitle": "Ouverture de l’alerte",
+    "alertLinkText": "Connexion en cours pour examiner ce rapport de danger.",
+    "alertLinkFailed": "Ce lien d’alerte est invalide ou a expiré. Connectez-vous pour continuer."
   },
   "home": {
     "publicTitle": "Signaler un problème de sécurité",

@@ -2,13 +2,14 @@ const { v4: uuid } = require('uuid');
 const crypto = require('crypto');
 const { query } = require('../../infrastructure/database/pool');
 const { hashPassword, verifyPassword } = require('../../infrastructure/auth/password');
-const { signAccessToken, signRefreshToken, verifyRefresh } = require('../../infrastructure/auth/jwt');
+const { signAccessToken, signRefreshToken, verifyRefresh, signAlertLink, verifyAlertLink } = require('../../infrastructure/auth/jwt');
 const { UnauthorizedError, ForbiddenError, ConflictError, NotFoundError, AppError } = require('../../shared/errors');
 const { ROLES } = require('../../shared/constants');
 const { sendWelcomeCredentials, sendLoginOtp, sendPasswordResetOtp } = require('../../infrastructure/notifications/accountMail');
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
+const REVIEW_ROLES = [ROLES.SAFETY_OFFICER, ROLES.SAFETY_MANAGER, ROLES.ADMINISTRATOR];
 
 function publicUser(row) {
   if (!row) return null;
@@ -345,6 +346,40 @@ async function getUser(id) {
   return publicUser(rows[0]);
 }
 
+async function findStaffByEmail(email) {
+  const value = String(email || '').trim().toLowerCase();
+  if (!value) return null;
+  const rows = await query(
+    'SELECT * FROM users WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1',
+    [value]
+  );
+  const user = rows[0];
+  if (!user || !REVIEW_ROLES.includes(user.role)) return null;
+  return user;
+}
+
+function createAlertLink({ user, reportId }) {
+  return signAlertLink({
+    sub: user.id,
+    typ: 'alert_sso',
+    reportId,
+  });
+}
+
+async function consumeAlertLink({ token, ip, userAgent }) {
+  const payload = verifyAlertLink(token);
+  if (payload.typ !== 'alert_sso' || !payload.sub || !payload.reportId) {
+    throw new UnauthorizedError('This alert link is not valid');
+  }
+  const rows = await query('SELECT * FROM users WHERE id = ? AND is_active = 1', [payload.sub]);
+  if (!rows[0]) throw new UnauthorizedError('This alert link is not valid');
+  if (!REVIEW_ROLES.includes(rows[0].role)) {
+    throw new ForbiddenError('This account cannot review hazard reports');
+  }
+  const session = await issueSession(rows[0], { ip, userAgent });
+  return { ...session, reportId: payload.reportId };
+}
+
 module.exports = {
   login,
   verifyOtp,
@@ -359,4 +394,7 @@ module.exports = {
   listUsers,
   getUser,
   publicUser,
+  findStaffByEmail,
+  createAlertLink,
+  consumeAlertLink,
 };

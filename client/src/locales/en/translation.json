@@ -90,7 +90,10 @@
     "resetSentText": "If an account exists, a reset code was sent to the registered email.",
     "resetDone": "Password reset",
     "resetDoneText": "Sign in with your new password. You will still receive a login OTP.",
-    "backToLogin": "Back to sign in"
+    "backToLogin": "Back to sign in",
+    "alertLinkTitle": "Opening SAFETY ALERT",
+    "alertLinkText": "Signing you in so you can review this hazard report.",
+    "alertLinkFailed": "This alert link is invalid or has expired. Sign in to continue."
   },
   "home": {
     "publicTitle": "Report a safety concern",

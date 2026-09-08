@@ -1,14 +1,18 @@
 const { env } = require('../../config/env');
 
-function formatAlert({ reportNo, location, severity, description }) {
-  return [
+function formatAlert({ reportNo, location, severity, description, reviewUrl }) {
+  const lines = [
     'SAFETY ALERT',
     '',
     `Report No: ${reportNo}`,
     `Location: ${location}`,
     `Severity: ${severity}`,
     `Description: ${description}`,
-  ].join('\n');
+  ];
+  if (reviewUrl) {
+    lines.push('', `Open in SpeakUp: ${reviewUrl}`);
+  }
+  return lines.join('\n');
 }
 
 async function sendWhatsApp({ to, body }) {

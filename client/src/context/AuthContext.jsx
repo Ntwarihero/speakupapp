@@ -14,14 +14,20 @@ export function AuthProvider({ children }) {
   });
   const [ready, setReady] = useState(false);
 
-  const persist = (data) => {
+  const persist = useCallback((data) => {
     if (data.accessToken) localStorage.setItem('speakup_access', data.accessToken);
     if (data.refreshToken) localStorage.setItem('speakup_refresh', data.refreshToken);
     if (data.user) {
       localStorage.setItem('speakup_user', JSON.stringify(data.user));
       setUser(data.user);
     }
-  };
+  }, []);
+
+  const consumeAlertLink = useCallback(async (token) => {
+    const { data } = await api.post('/auth/alert-sso', { token });
+    persist(data);
+    return data;
+  }, [persist]);
 
   const logout = useCallback(async () => {
     try {
@@ -90,8 +96,8 @@ export function AuthProvider({ children }) {
   }, [user, logout]);
 
   const value = useMemo(
-    () => ({ user, ready, login, verifyOtp, resendOtp, changePassword, logout, persist }),
-    [user, ready, logout]
+    () => ({ user, ready, login, verifyOtp, resendOtp, changePassword, logout, persist, consumeAlertLink }),
+    [user, ready, logout, consumeAlertLink]
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

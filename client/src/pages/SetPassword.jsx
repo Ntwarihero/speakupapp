@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 import { useAuth } from '../context/AuthContext';
+import { consumeNextPath } from '../utils/safePath';
 
 export default function SetPassword() {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export default function SetPassword() {
         title: t('auth.setPasswordDone'),
         confirmButtonColor: '#5C2D91',
       });
-      navigate('/app', { replace: true });
+      navigate(consumeNextPath('/app'), { replace: true });
     } catch (err) {
       Swal.fire({
         icon: 'error',

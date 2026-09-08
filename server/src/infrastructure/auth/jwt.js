@@ -26,4 +26,23 @@ function verifyRefresh(token) {
   }
 }
 
-module.exports = { signAccessToken, signRefreshToken, verifyAccess, verifyRefresh };
+function signAlertLink(payload) {
+  return jwt.sign(payload, env.jwt.accessSecret, { expiresIn: '7d' });
+}
+
+function verifyAlertLink(token) {
+  try {
+    return jwt.verify(token, env.jwt.accessSecret);
+  } catch {
+    throw new UnauthorizedError('This alert link is invalid or has expired');
+  }
+}
+
+module.exports = {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccess,
+  verifyRefresh,
+  signAlertLink,
+  verifyAlertLink,
+};
