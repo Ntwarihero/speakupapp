@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
@@ -74,25 +74,45 @@ export default function ReportForm() {
     };
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    (async () => {
+  const applyLocations = (locations) => {
+    const list = Array.isArray(locations) ? locations : [];
+    setLookups((prev) => ({ ...prev, locations: list }));
+    setLocationLoad(list.length ? 'ready' : 'empty');
+    return list;
+  };
+
+  const loadLocations = useCallback(async () => {
+    setLocationLoad('loading');
+    try {
+      const { data } = await api.get('/locations');
+      return applyLocations(data?.locations);
+    } catch {
       try {
-        const { data } = await api.get('/locations', { signal: controller.signal });
-        const locations = Array.isArray(data?.locations) ? data.locations : [];
-        setLookups((prev) => ({ ...prev, locations }));
-        setLocationLoad(locations.length ? 'ready' : 'empty');
-        const match = locations.find((l) => l.qr_slug === qrLocation);
-        if (match) {
-          setForm((f) => applySiteCoords(match, { ...f, locationId: match.id }));
-        }
-      } catch (err) {
-        if (err.code === 'ERR_CANCELED' || err.name === 'CanceledError') return;
-        setLocationLoad('error');
+        const { data } = await api.get('/lookups');
+        return applyLocations(data?.locations);
+      } catch {
+        setLocationLoad((current) => (current === 'ready' ? current : 'error'));
+        return [];
       }
+    }
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      await loadLocations();
+      if (!active) return;
     })();
-    return () => controller.abort();
-  }, [qrLocation]);
+    return () => {
+      active = false;
+    };
+  }, [loadLocations]);
+
+  useEffect(() => {
+    const match = lookups.locations.find((l) => l.qr_slug === qrLocation);
+    if (!match) return;
+    setForm((f) => (f.locationId ? f : applySiteCoords(match, { ...f, locationId: match.id })));
+  }, [qrLocation, lookups.locations]);
 
   const selectedLoc = useMemo(
     () => lookups.locations.find((l) => l.id === form.locationId),
@@ -242,27 +262,34 @@ export default function ReportForm() {
           </div>
           <div className="col-md-4">
             <label className="form-label">{t('report.location')} *</label>
-            <select
-              className="form-select"
-              value={form.locationId}
-              onChange={(e) => {
-                const locationId = e.target.value;
-                const loc = lookups.locations.find((l) => l.id === locationId);
-                setForm((f) => applySiteCoords(loc, { ...f, locationId }));
-              }}
-              required
-              disabled={locationLoad !== 'ready'}
-            >
-              {locationLoad === 'loading' && <option value="">Loading locations…</option>}
-              {locationLoad === 'error' && <option value="">Locations unavailable — refresh</option>}
-              {locationLoad === 'empty' && <option value="">No locations found</option>}
-              {locationLoad === 'ready' && <option value="">{t('report.location')}</option>}
-              {lookups.locations.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.name}
-                </option>
-              ))}
-            </select>
+            <div className="d-flex gap-2">
+              <select
+                className="form-select"
+                value={form.locationId}
+                onChange={(e) => {
+                  const locationId = e.target.value;
+                  const loc = lookups.locations.find((l) => l.id === locationId);
+                  setForm((f) => applySiteCoords(loc, { ...f, locationId }));
+                }}
+                required
+                disabled={locationLoad === 'loading'}
+              >
+                {locationLoad === 'loading' && <option value="">Loading locations…</option>}
+                {locationLoad === 'error' && <option value="">Locations unavailable — retry</option>}
+                {locationLoad === 'empty' && <option value="">No locations found</option>}
+                {locationLoad === 'ready' && <option value="">{t('report.location')}</option>}
+                {lookups.locations.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                  </option>
+                ))}
+              </select>
+              {locationLoad === 'error' && (
+                <button type="button" className="btn btn-outline-dpw" onClick={loadLocations}>
+                  Retry
+                </button>
+              )}
+            </div>
           </div>
         </div>
         {selectedLoc?.code === 'OTHER' && (
