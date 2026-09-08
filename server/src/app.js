@@ -10,11 +10,21 @@ const { ensureAuthSchema } = require('./infrastructure/database/migrate');
 
 let schemaReady;
 
+function isPublicRead(req) {
+  const full = String(req.originalUrl || req.url || '');
+  if (/\/admin\//.test(full)) return false;
+  const raw = full.split('?')[0];
+  const pathParam = new URLSearchParams(full.split('?')[1] || '').get('path');
+  const last = raw.split('/').filter(Boolean).pop() || pathParam || '';
+  return ['health', 'locations', 'lookups'].includes(last);
+}
+
 function createApp() {
   const app = express();
   app.set('trust proxy', 1);
 
   app.use(async (req, res, next) => {
+    if (req.method === 'GET' && isPublicRead(req)) return next();
     try {
       schemaReady =
         schemaReady ||

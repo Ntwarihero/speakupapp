@@ -13,7 +13,7 @@ const pool = mysql.createPool({
   namedPlaceholders: true,
   timezone: 'Z',
   charset: 'utf8mb4',
-  enableKeepAlive: true,
+  enableKeepAlive: !process.env.VERCEL,
   ssl: env.dbSsl ? { rejectUnauthorized: false } : undefined,
 });
 

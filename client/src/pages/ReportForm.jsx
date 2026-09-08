@@ -6,6 +6,7 @@ import api from '../services/api';
 import { useSession } from '../context/SessionContext';
 import { useAuth } from '../context/AuthContext';
 import { ReportMap } from '../components/Maps';
+import { FALLBACK_LOCATIONS } from '../data/sites';
 
 const TYPES = [
   'unsafe_condition',
@@ -41,8 +42,7 @@ export default function ReportForm() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const moduleName = params.get('module') || 'general';
-  const [lookups, setLookups] = useState({ locations: [], categories: [] });
-  const [locationLoad, setLocationLoad] = useState('loading');
+  const [lookups, setLookups] = useState({ locations: FALLBACK_LOCATIONS, categories: [] });
   const [busy, setBusy] = useState(false);
   const [previews, setPreviews] = useState([]);
   const [form, setForm] = useState({
@@ -75,26 +75,37 @@ export default function ReportForm() {
   };
 
   const applyLocations = (locations) => {
-    const list = Array.isArray(locations) ? locations : [];
+    const list = Array.isArray(locations) && locations.length ? locations : FALLBACK_LOCATIONS;
     setLookups((prev) => ({ ...prev, locations: list }));
-    setLocationLoad(list.length ? 'ready' : 'empty');
     return list;
   };
 
   const loadLocations = useCallback(async () => {
-    setLocationLoad('loading');
-    try {
-      const { data } = await api.get('/locations');
-      return applyLocations(data?.locations);
-    } catch {
+    const fetchJson = async (url, ms = 8000) => {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), ms);
       try {
-        const { data } = await api.get('/lookups');
-        return applyLocations(data?.locations);
-      } catch {
-        setLocationLoad((current) => (current === 'ready' ? current : 'error'));
-        return [];
+        const res = await fetch(url, { signal: ctrl.signal, cache: 'no-store', headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      } finally {
+        clearTimeout(timer);
       }
+    };
+
+    try {
+      const data = await fetchJson('/api/locations');
+      if (data?.locations?.length) return applyLocations(data.locations);
+    } catch {
+      /* try lookups, then keep fallback */
     }
+    try {
+      const data = await fetchJson('/api/lookups');
+      if (data?.locations?.length) return applyLocations(data.locations);
+    } catch {
+      /* keep fallback */
+    }
+    return applyLocations(FALLBACK_LOCATIONS);
   }, []);
 
   useEffect(() => {
@@ -262,34 +273,23 @@ export default function ReportForm() {
           </div>
           <div className="col-md-4">
             <label className="form-label">{t('report.location')} *</label>
-            <div className="d-flex gap-2">
-              <select
-                className="form-select"
-                value={form.locationId}
-                onChange={(e) => {
-                  const locationId = e.target.value;
-                  const loc = lookups.locations.find((l) => l.id === locationId);
-                  setForm((f) => applySiteCoords(loc, { ...f, locationId }));
-                }}
-                required
-                disabled={locationLoad === 'loading'}
-              >
-                {locationLoad === 'loading' && <option value="">Loading locations…</option>}
-                {locationLoad === 'error' && <option value="">Locations unavailable — retry</option>}
-                {locationLoad === 'empty' && <option value="">No locations found</option>}
-                {locationLoad === 'ready' && <option value="">{t('report.location')}</option>}
-                {lookups.locations.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
-              {locationLoad === 'error' && (
-                <button type="button" className="btn btn-outline-dpw" onClick={loadLocations}>
-                  Retry
-                </button>
-              )}
-            </div>
+            <select
+              className="form-select"
+              value={form.locationId}
+              onChange={(e) => {
+                const locationId = e.target.value;
+                const loc = lookups.locations.find((l) => l.id === locationId);
+                setForm((f) => applySiteCoords(loc, { ...f, locationId }));
+              }}
+              required
+            >
+              <option value="">{t('report.location')}</option>
+              {lookups.locations.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         {selectedLoc?.code === 'OTHER' && (
