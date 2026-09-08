@@ -5,6 +5,7 @@ const AuthService = require('../../../application/services/AuthService');
 const { writeAudit } = require('../../../infrastructure/database/audit');
 const { query } = require('../../../infrastructure/database/pool');
 const { env } = require('../../../config/env');
+const { SITE_LOCATIONS } = require('../../../shared/siteLocations');
 const path = require('path');
 
 async function getInvestigation(req, res, next) {
@@ -75,12 +76,42 @@ async function analytics(req, res, next) {
   }
 }
 
-async function publicLocations(_req, res, next) {
+async function publicLocations(_req, res) {
+  res.setHeader('Cache-Control', 'no-store');
   try {
-    res.json({ locations: await AdminService.listActiveLocations() });
-  } catch (err) {
-    next(err);
+    const locations = await Promise.race([
+      AdminService.listActiveLocations(),
+      new Promise((resolve) => setTimeout(() => resolve(null), 800)),
+    ]);
+    res.json({ locations: Array.isArray(locations) && locations.length ? locations : SITE_LOCATIONS });
+  } catch {
+    res.json({ locations: SITE_LOCATIONS });
   }
+}
+
+function clientReset(_req, res) {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>SpeakUp refresh</title></head>
+<body style="font-family:Segoe UI,Arial,sans-serif;padding:32px;color:#1e1233">
+  <p>Refreshing SpeakUp…</p>
+  <script>
+    Promise.all([
+      navigator.serviceWorker ? navigator.serviceWorker.getRegistrations().then(function (regs) {
+        return Promise.all(regs.map(function (reg) { return reg.unregister(); }));
+      }) : Promise.resolve(),
+      window.caches ? caches.keys().then(function (names) {
+        return Promise.all(names.map(function (name) { return caches.delete(name); }));
+      }) : Promise.resolve()
+    ]).finally(function () {
+      try { localStorage.removeItem('speakup-flush-sw-20260908-locations'); } catch (e) {}
+      location.replace('/report?module=general');
+    });
+  </script>
+</body>
+</html>`);
 }
 
 async function lookups(_req, res, next) {
@@ -191,5 +222,6 @@ module.exports = {
   settings,
   file,
   health,
+  clientReset,
   AuthService,
 };

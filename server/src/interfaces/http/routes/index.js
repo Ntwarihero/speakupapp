@@ -30,6 +30,7 @@ function buildRouter() {
   const api = Router();
 
   api.get('/health', OpsController.health);
+  api.get('/client-reset', OpsController.clientReset);
   api.get('/locations', OpsController.publicLocations);
   api.get('/lookups', OpsController.lookups);
   api.get('/files/:filename', OpsController.file);

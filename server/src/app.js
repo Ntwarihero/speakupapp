@@ -16,7 +16,7 @@ function isPublicRead(req) {
   const raw = full.split('?')[0];
   const pathParam = new URLSearchParams(full.split('?')[1] || '').get('path');
   const last = raw.split('/').filter(Boolean).pop() || pathParam || '';
-  return ['health', 'locations', 'lookups'].includes(last);
+  return ['health', 'locations', 'lookups', 'client-reset'].includes(last);
 }
 
 function createApp() {
