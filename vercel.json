@@ -10,12 +10,17 @@
     }
   },
   "rewrites": [
+    { "source": "/api/locations", "destination": "/locations.json" },
     { "source": "/api/:path*", "destination": "/api" },
     { "source": "/((?!api/)(?!.*\\.).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
-      "source": "/refresh.html",
+      "source": "/locations.json",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/api/locations",
       "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     },
     {

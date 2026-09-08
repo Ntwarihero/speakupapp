@@ -94,16 +94,10 @@ export default function ReportForm() {
     };
 
     try {
-      const data = await fetchJson('/api/locations');
+      const data = await fetchJson('/locations.json');
       if (data?.locations?.length) return applyLocations(data.locations);
     } catch {
-      /* try lookups, then keep fallback */
-    }
-    try {
-      const data = await fetchJson('/api/lookups');
-      if (data?.locations?.length) return applyLocations(data.locations);
-    } catch {
-      /* keep fallback */
+      /* keep the sites already on the form */
     }
     return applyLocations(FALLBACK_LOCATIONS);
   }, []);
