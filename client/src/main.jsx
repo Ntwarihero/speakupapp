@@ -8,14 +8,15 @@ import 'leaflet/dist/leaflet.css';
 import './i18n';
 import './index.css';
 import App from './App';
-import { registerSW } from 'virtual:pwa-register';
 
-const updateSW = registerSW({
-  immediate: true,
-  onNeedRefresh() {
-    updateSW(true);
-  },
-});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((regs) => {
+    regs.forEach((reg) => reg.unregister());
+  });
+}
+if (window.caches) {
+  caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
