@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SpeakUp refresh</title>
+  </head>
+  <body style="font-family: Segoe UI, Arial, sans-serif; padding: 32px; color: #1e1233">
+    <p>Refreshing SpeakUp…</p>
+    <script>
+      Promise.all([
+        navigator.serviceWorker
+          ? navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (reg) { return reg.unregister(); }));
+            })
+          : Promise.resolve(),
+        window.caches
+          ? caches.keys().then(function (names) {
+              return Promise.all(names.map(function (name) { return caches.delete(name); }));
+            })
+          : Promise.resolve(),
+      ]).finally(function () {
+        location.replace('/report?module=general');
+      });
+    </script>
+  </body>
+</html>
