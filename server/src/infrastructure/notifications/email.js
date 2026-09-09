@@ -7,23 +7,33 @@ function getTransport() {
     host: env.smtp.host,
     port: env.smtp.port,
     secure: env.smtp.secure,
+    requireTLS: !env.smtp.secure,
     auth: { user: env.smtp.user, pass: env.smtp.pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
   });
 }
 
 async function sendEmail({ to, subject, text, html }) {
+  const recipient = String(to || '').trim();
+  if (!recipient) {
+    console.warn('[mail] skipped: empty recipient');
+    return { skipped: true };
+  }
   const transport = getTransport();
   if (!transport) {
-    console.warn('[mail] SMTP not configured. Skipping email to', to);
+    console.warn('[mail] SMTP not configured. Skipping email to', recipient);
     return { skipped: true };
   }
   await transport.sendMail({
     from: env.smtp.from,
-    to,
+    to: recipient,
     subject,
     text,
     html: html || `<pre style="font-family:inherit">${text}</pre>`,
   });
+  console.log('[mail] sent', subject, 'to', recipient);
   return { skipped: false };
 }
 

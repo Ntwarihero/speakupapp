@@ -62,7 +62,7 @@ const env = {
   alerts: {
     safetyManager: process.env.ALERT_SAFETY_MANAGER || 'safety.manager@dpworldkigali.com',
     operationsManager: process.env.ALERT_OPERATIONS_MANAGER || 'operations.manager@dpworldkigali.com',
-    securityTeam: process.env.ALERT_SECURITY_TEAM || 'security@dpworldkigali.com',
+    securityTeam: process.env.ALERT_SECURITY_TEAM || 'Eric.Burasanzwe@dpworld.com',
   },
   whatsapp: {
     enabled: process.env.WHATSAPP_ENABLED === 'true',

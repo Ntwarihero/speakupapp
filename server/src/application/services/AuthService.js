@@ -90,19 +90,37 @@ async function createLoginOtp(user) {
 }
 
 async function createResetOtp(user) {
-  await query(
-    `UPDATE login_otps SET consumed_at = NOW()
-     WHERE user_id = ? AND consumed_at IS NULL AND purpose = 'reset'`,
-    [user.id]
-  );
+  try {
+    await query(
+      `UPDATE login_otps SET consumed_at = NOW()
+       WHERE user_id = ? AND consumed_at IS NULL AND purpose = 'reset'`,
+      [user.id]
+    );
+  } catch {
+    await query(
+      `UPDATE login_otps SET consumed_at = NOW()
+       WHERE user_id = ? AND consumed_at IS NULL`,
+      [user.id]
+    );
+  }
   const otp = String(crypto.randomInt(100000, 1000000));
   const id = uuid();
-  await query(
-    `INSERT INTO login_otps (id, user_id, otp_hash, expires_at, purpose)
-     VALUES (?, ?, ?, ?, 'reset')`,
-    [id, user.id, hashOtp(otp), new Date(Date.now() + OTP_TTL_MS)]
-  );
-  await sendPasswordResetOtp({ to: user.email, fullName: user.full_name, otp });
+  try {
+    await query(
+      `INSERT INTO login_otps (id, user_id, otp_hash, expires_at, purpose)
+       VALUES (?, ?, ?, ?, 'reset')`,
+      [id, user.id, hashOtp(otp), new Date(Date.now() + OTP_TTL_MS)]
+    );
+  } catch (err) {
+    if (!/Unknown column 'purpose'|ER_BAD_FIELD_ERROR/i.test(err.message)) throw err;
+    await query(
+      `INSERT INTO login_otps (id, user_id, otp_hash, expires_at)
+       VALUES (?, ?, ?, ?)`,
+      [id, user.id, hashOtp(otp), new Date(Date.now() + OTP_TTL_MS)]
+    );
+  }
+  await sendPasswordResetOtp({ to: String(user.email).trim(), fullName: user.full_name, otp });
+  console.log('[auth] password reset code emailed to', maskEmail(user.email));
   return id;
 }
 
@@ -110,8 +128,12 @@ async function findByUsernameOrEmail(identifier) {
   const value = String(identifier || '').trim();
   if (!value) return null;
   const rows = await query(
-    'SELECT * FROM users WHERE username = ? OR email = ? LIMIT 1',
-    [value, value]
+    `SELECT * FROM users
+     WHERE username = ?
+        OR LOWER(username) = LOWER(?)
+        OR LOWER(email) = LOWER(?)
+     LIMIT 1`,
+    [value, value, value]
   );
   return rows[0] || null;
 }
@@ -122,7 +144,14 @@ async function requestPasswordReset({ username }) {
     ok: true,
     message: 'If an account exists, a reset code was sent to the registered email.',
   };
-  if (!user || !user.is_active) return generic;
+  if (!user || !user.is_active) {
+    console.warn('[auth] password reset: no active account for that username/email');
+    return generic;
+  }
+  if (!user.email) {
+    console.warn('[auth] password reset: account has no email', user.username);
+    return generic;
+  }
   const challengeId = await createResetOtp(user);
   return {
     ...generic,
