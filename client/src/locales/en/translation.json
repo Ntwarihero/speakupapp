@@ -16,9 +16,10 @@
   },
   "identify": {
     "title": "Who Are You?",
-    "text": "Select the option that best describes you. Customers can report immediately — no login required. Employees should choose Employee to sign in.",
+    "text": "Select the option that best describes you. Customers and employees can report immediately — no login required. Safety, security and system admins sign in with Staff login.",
     "confirm": "Continue",
-    "loginOption": "Log in"
+    "loginOption": "Log in",
+    "staffLogin": "Staff login (Safety / Security / Admin)"
   },
   "roles": {
     "visitor": "DP World Visitor",

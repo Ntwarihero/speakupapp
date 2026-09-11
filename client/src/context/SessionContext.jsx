@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
-const PUBLIC = ['visitor', 'customer', 'contractor', 'driver'];
-const INTERNAL = ['employee', 'safety_officer', 'safety_manager', 'administrator'];
+const PUBLIC = ['visitor', 'customer', 'contractor', 'driver', 'employee'];
+const INTERNAL = ['safety_officer', 'safety_manager', 'administrator'];
 
 const SessionContext = createContext(null);
 

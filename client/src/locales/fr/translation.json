@@ -16,9 +16,10 @@
   },
   "identify": {
     "title": "Qui êtes-vous ?",
-    "text": "Sélectionnez l’option qui vous correspond. Les clients peuvent signaler immédiatement — sans connexion. Les employés doivent choisir Employé pour se connecter.",
+    "text": "Sélectionnez l’option qui vous correspond. Les clients et les employés peuvent signaler immédiatement — sans connexion. HSE, sécurité et administrateurs utilisent Connexion du personnel.",
     "confirm": "Continuer",
-    "loginOption": "Connexion"
+    "loginOption": "Connexion",
+    "staffLogin": "Connexion du personnel (HSE / Sécurité / Admin)"
   },
   "roles": {
     "visitor": "Visiteur DP World",

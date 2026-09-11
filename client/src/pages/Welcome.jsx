@@ -35,10 +35,6 @@ export default function Welcome() {
       allowEscapeKey: false,
     });
     if (!result.value) return;
-    if (result.value === 'employee') {
-      navigate('/login');
-      return;
-    }
     setCategory(result.value);
     navigate('/home');
   };
@@ -80,6 +76,13 @@ export default function Welcome() {
         </div>
         <button type="button" className="btn btn-gold btn-lg px-4 align-self-start" onClick={askWho}>
           {t('welcome.continue')}
+        </button>
+        <button
+          type="button"
+          className="btn btn-link text-white text-decoration-underline align-self-start mt-3 px-0"
+          onClick={() => navigate('/login')}
+        >
+          {t('identify.staffLogin')}
         </button>
       </div>
     </div>

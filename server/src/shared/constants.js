@@ -1,5 +1,5 @@
-const PUBLIC_CATEGORIES = ['visitor', 'customer', 'contractor', 'driver'];
-const INTERNAL_CATEGORIES = ['employee', 'safety_officer', 'safety_manager', 'administrator'];
+const PUBLIC_CATEGORIES = ['visitor', 'customer', 'contractor', 'driver', 'employee'];
+const INTERNAL_CATEGORIES = ['safety_officer', 'safety_manager', 'administrator'];
 
 const ROLES = {
   EMPLOYEE: 'employee',

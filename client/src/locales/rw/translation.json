@@ -16,9 +16,10 @@
   },
   "identify": {
     "title": "Uri nde?",
-    "text": "Hitamo icyo uvugwaho. Abakiriya bashobora gutanga raporo ako kanya — nta kwinjira. Abakozi bahitamo Umukozi kugira ngo binjire.",
+    "text": "Hitamo icyo uvugwaho. Abakiriya n'abakozi bashobora gutanga raporo ako kanya — nta kwinjira. Ab'umutekano n'abayobozi bakoresha Kwinjira kw'abakozi.",
     "confirm": "Komeza",
-    "loginOption": "Injira"
+    "loginOption": "Injira",
+    "staffLogin": "Kwinjira kw'abakozi (Umutekano / Admin)"
   },
   "roles": {
     "visitor": "Umushyitsi wa DP World",
