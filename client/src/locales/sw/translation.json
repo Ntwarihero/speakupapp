@@ -16,10 +16,9 @@
   },
   "identify": {
     "title": "Wewe ni nani?",
-    "text": "Chagua chaguo linalokufaa. Wateja na wafanyakazi wanaweza kuripoti mara moja — bila kuingia. Usalama na wasimamizi wanaingia kupitia Kuingia kwa wafanyakazi.",
+    "text": "Chagua chaguo linalokufaa. Wateja na wafanyakazi wanaweza kuripoti mara moja — bila kuingia.",
     "confirm": "Endelea",
-    "loginOption": "Ingia",
-    "staffLogin": "Kuingia kwa wafanyakazi (Usalama / Admin)"
+    "loginOption": "Ingia"
   },
   "roles": {
     "visitor": "Mgeni wa DP World",
