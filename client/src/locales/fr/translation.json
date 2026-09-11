@@ -16,7 +16,7 @@
   },
   "identify": {
     "title": "Qui êtes-vous ?",
-    "text": "Sélectionnez l’option qui vous correspond. Visiteurs, clients, prestataires et conducteurs peuvent signaler immédiatement — sans connexion. Le personnel doit choisir Connexion.",
+    "text": "Sélectionnez l’option qui vous correspond. Les clients peuvent signaler immédiatement — sans connexion. Les employés doivent choisir Employé pour se connecter.",
     "confirm": "Continuer",
     "loginOption": "Connexion"
   },

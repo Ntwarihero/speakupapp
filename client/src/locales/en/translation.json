@@ -16,7 +16,7 @@
   },
   "identify": {
     "title": "Who Are You?",
-    "text": "Select the option that best describes you. Visitors, customers, contractors and drivers can report immediately — no login required. Staff should choose Log in.",
+    "text": "Select the option that best describes you. Customers can report immediately — no login required. Employees should choose Employee to sign in.",
     "confirm": "Continue",
     "loginOption": "Log in"
   },

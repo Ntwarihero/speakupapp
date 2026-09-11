@@ -6,8 +6,7 @@ import BrandMark from '../components/BrandMark';
 import { LANGS } from '../components/LanguageSwitcher';
 import { useSession } from '../context/SessionContext';
 
-const PUBLIC_CHOICES = ['visitor', 'customer', 'contractor', 'driver'];
-const LOGIN_CHOICE = 'login';
+const WHO_CHOICES = ['customer', 'employee'];
 
 export default function Welcome() {
   const { t, i18n } = useTranslation();
@@ -23,10 +22,7 @@ export default function Welcome() {
 
   const askWho = async () => {
     i18n.changeLanguage(picked);
-    const options = {
-      ...Object.fromEntries(PUBLIC_CHOICES.map((r) => [r, t(`roles.${r}`)])),
-      [LOGIN_CHOICE]: t('identify.loginOption'),
-    };
+    const options = Object.fromEntries(WHO_CHOICES.map((r) => [r, t(`roles.${r}`)]));
     const result = await Swal.fire({
       title: t('identify.title'),
       text: t('identify.text'),
@@ -39,7 +35,7 @@ export default function Welcome() {
       allowEscapeKey: false,
     });
     if (!result.value) return;
-    if (result.value === LOGIN_CHOICE) {
+    if (result.value === 'employee') {
       navigate('/login');
       return;
     }
