@@ -394,20 +394,24 @@ a { color: var(--dpw-purple); }
   gap: 20px;
 }
 .poster-brand-row .fw-bold,
-.poster-brand-row .small {
+.poster-brand-row .small,
+.poster-page .brand-mark .fw-bold,
+.poster-page .brand-mark .small {
   font-family: Aptos, "Segoe UI", Calibri, Arial, sans-serif !important;
 }
-.poster-dpw-logo {
-  height: 64px;
+.poster-dpw-logo,
+.brand-mark-logo {
   width: auto;
-  max-width: 160px;
+  max-width: 180px;
   object-fit: contain;
+  display: block;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.brand-mark-logo-on-dark {
   background: #ffffff;
   border-radius: 12px;
   padding: 8px 12px;
-  flex-shrink: 0;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
 }
 .poster-kicker {
   margin: 36px 0 8px;
