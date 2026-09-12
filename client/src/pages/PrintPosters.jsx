@@ -58,7 +58,14 @@ export default function PrintPosters() {
       <article className="poster-page poster-single">
         <div className="hazard-stripe" />
         <div className="poster-inner poster-inner-single">
-          <BrandMark light />
+          <div className="poster-brand-row">
+            <BrandMark light />
+            <img
+              src="/dp-world-logo.svg"
+              alt="DP World"
+              className="poster-dpw-logo"
+            />
+          </div>
           <p className="poster-kicker">Health, Safety &amp; Environment</p>
           <h1 className="poster-title">Welcome to DP World Kigali Safety Reporting System</h1>
           <p className="poster-lead">

@@ -14,7 +14,7 @@ function createQr(data) {
     type: 'svg',
     data,
     margin: 12,
-    qrOptions: { errorCorrectionLevel: 'H' },
+    qrOptions: { errorCorrectionLevel: 'M' },
     backgroundOptions: { color: '#ffffff' },
     dotsOptions: {
       type: 'extra-rounded',
@@ -36,12 +36,6 @@ function createQr(data) {
     cornersDotOptions: {
       type: 'dot',
       color: PURPLE_DEEP,
-    },
-    image: '/dp-world-qr-badge.svg',
-    imageOptions: {
-      hideBackgroundDots: false,
-      imageSize: 0.34,
-      margin: 2,
     },
   });
 }
