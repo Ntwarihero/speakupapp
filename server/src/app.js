@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 const { env } = require('./config/env');
 const { buildRouter } = require('./interfaces/http/routes');
 const { errorHandler, notFound } = require('./interfaces/http/middleware/error');
-const { ensureAuthSchema } = require('./infrastructure/database/migrate');
+const { ensureAuthSchema, syncSiteLocations } = require('./infrastructure/database/migrate');
 
 let schemaReady;
 
@@ -22,6 +22,7 @@ function isPublicRead(req) {
 function createApp() {
   const app = express();
   app.set('trust proxy', 1);
+  syncSiteLocations();
 
   app.use(async (req, res, next) => {
     if (req.method === 'GET' && isPublicRead(req)) return next();

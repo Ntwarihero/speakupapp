@@ -3,6 +3,7 @@ const { query, withTransaction } = require('../../infrastructure/database/pool')
 const { notifyHighSeverity } = require('../../infrastructure/notifications/alerts');
 const { AppError, NotFoundError, ForbiddenError } = require('../../shared/errors');
 const { STATUS_TRANSITIONS, REPORT_STATUSES, PUBLIC_CATEGORIES, ROLES } = require('../../shared/constants');
+const { syncSiteLocations } = require('../../infrastructure/database/migrate');
 
 function mapReport(row) {
   if (!row) return null;
@@ -104,6 +105,7 @@ async function createReport(payload, files, actor) {
   if (PUBLIC_CATEGORIES.includes(payload.reporterCategory) && actor) {
     /* public users may still be logged in later; allow */
   }
+  await syncSiteLocations();
   const locations = await query('SELECT id, latitude, longitude FROM locations WHERE id = ?', [payload.locationId]);
   if (!locations[0]) throw new NotFoundError('Location not found');
   const latitude = toCoord(payload.latitude) ?? toCoord(locations[0].latitude);
